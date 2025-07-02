@@ -10,4 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "pipex.h"
 
+int main(int argc, char **argv)
+{
+	(void)argc;
+	(void)argv;
+
+	printf("%s\n", "test");
+	return (0);
+}
