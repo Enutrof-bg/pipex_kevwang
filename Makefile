@@ -18,20 +18,27 @@ NAME = pipex
 
 FILE = main.c
 
+INCLUDE = -Lft_printf -lftprintf
+
 SRC = ${FILE:.c=.o}
 
 all: ${NAME}
 
 ${NAME}:${SRC}
-	${CC} ${CFLAGS} -o $@ $^
+	make -C ft_printf
+	${CC} ${CFLAGS} -o $@ $^ ${INCLUDE}
 
 %.o:%.c
 	${CC} ${CFLAGS} -c $^
 
 clean:
+	make clean -C ft_printf
+	rm -f infile
+	rm -f a.out
 	rm -f main.o
 
 fclean:clean
+	make fclean -C ft_printf
 	rm -f pipex
 
 re:fclean

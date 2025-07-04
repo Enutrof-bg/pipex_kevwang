@@ -5,13 +5,13 @@ int main(/*int argc, char *argv[]*/)
 {
 
     char *args[3];
-    char test[5000];
-    int readfd;
+    // char test[5000];
+    // int readfd;
     int fdop;
 
-    (void)fdop;
-    (void)test;
-    (void)readfd;
+    // (void)fdop;
+    // (void)test;
+    // (void)readfd;
 
     args[0] = "ls";
     args[1] = "-l";
@@ -31,7 +31,7 @@ int main(/*int argc, char *argv[]*/)
     // // printf("fd:%d\n", fd);
     dup2(fdop, 1);
 
-    printf("caca\n");
+    // printf("caca\n");
     // dup2(fd[1], 1);
     // if (id1 == 0)
     // {
@@ -42,7 +42,7 @@ int main(/*int argc, char *argv[]*/)
     // dup2(fdopen, 1);
     execve("/bin/ls", args, NULL);
     perror("execve");   /* execve() ne retourne qu'en cas d'erreur */
-    // close(fdop);
+
     // close(fd[1]);
     // readfd = read(fd[0], test, 5000);
     // dup2(1, fd[1]);
