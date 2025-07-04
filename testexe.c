@@ -31,7 +31,7 @@ int main(/*int argc, char *argv[]*/)
     // // printf("fd:%d\n", fd);
     dup2(fdop, 1);
 
-    printf("caca\n");
+    // printf("caca\n");
     // dup2(fd[1], 1);
     // if (id1 == 0)
     // {
