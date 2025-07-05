@@ -18,27 +18,15 @@ void	cmd1(char **argv, char **env, int fd[2])
 
 	infd = open(argv[1], O_RDONLY, 0777);
 	if (infd == -1)
-	{
-		ft_close(fd, -1);
-		exit(EXIT_FAILURE);
-	}
+		ft_close(fd, -1, EXIT);
 	if (dup2(infd, 0) == -1)
-	{
-		ft_close(fd, infd);
-		exit(EXIT_FAILURE);
-	}
+		ft_close(fd, infd, EXIT);
 	if (dup2(fd[1], 1) == -1)
-	{
-		ft_close(fd, infd);
-		exit(EXIT_FAILURE);
-	}
+		ft_close(fd, infd, EXIT);
 	close(fd[0]);
 	if (exec(argv[2], env) == -1)
-	{
-		ft_close(fd, infd);
-		exit(EXIT_FAILURE);
-	}
-	ft_close(fd, infd);
+		ft_close(fd, infd, EXIT);
+	ft_close(fd, infd, NOEXIT);
 }
 
 void	cmd2(char **argv, char **env, int fd[2])
@@ -47,27 +35,15 @@ void	cmd2(char **argv, char **env, int fd[2])
 
 	outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
 	if (outfd == -1)
-	{
-		ft_close(fd, -1);
-		exit(EXIT_FAILURE);
-	}
+		ft_close(fd, -1, EXIT);
 	if (dup2(outfd, 1) == -1)
-	{
-		ft_close(fd, outfd);
-		exit(EXIT_FAILURE);
-	}
+		ft_close(fd, outfd, EXIT);
 	if (dup2(fd[0], 0) == -1)
-	{
-		ft_close(fd, outfd);
-		exit(EXIT_FAILURE);
-	}
+		ft_close(fd, outfd, EXIT);
 	close(fd[1]);
 	if (exec(argv[3], env) == -1)
-	{
-		ft_close(fd, outfd);
-		exit(EXIT_FAILURE);
-	}
-	ft_close(fd, outfd);
+		ft_close(fd, outfd, EXIT);
+	ft_close(fd, outfd, NOEXIT);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -81,10 +57,7 @@ int	main(int argc, char **argv, char **env)
 			exit(EXIT_FAILURE);
 		id1 = fork();
 		if (id1 == -1)
-		{
-			ft_close(fd, -1);
-			exit(EXIT_FAILURE);
-		}
+			ft_close(fd, -1, EXIT);
 		if (id1 == 0)
 		{
 			cmd1(argv, env, fd);
