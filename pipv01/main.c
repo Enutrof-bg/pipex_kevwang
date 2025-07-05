@@ -12,73 +12,112 @@
 
 #include "pipex.h"
 
-void	cmd1(char **argv, char **env, int fd[2])
+char *get_path(char **env)
 {
-	int	infd;
-	// printf("cmd1||fd0:%d fd1:%d\n", fd[0], fd[1]);
-	infd = open(argv[1], O_RDONLY, 0777);
-	if (infd == -1)
-		ft_close(fd, -1, EXIT);
-	if (dup2(infd, 0) == -1)
-		ft_close(fd, infd, EXIT);
-	if (dup2(fd[1], 1) == -1)
-		ft_close(fd, infd, EXIT);
-	close(fd[0]);
-	if (exec(argv[2], env) == -1)
-		ft_close(fd, infd, EXIT);
-	close(infd);
-	// ft_close(fd, infd, NOEXIT);
-	close(fd[1]);
-	// close(fd[0]);
+	char *str;
+    int i = 0;
+    while (env[i])
+    {
+        if (ft_strncmp(env[i], "PATH", 4) == 0)
+        {
+        	str = env[i];
+        	str = str+5;
+        	return (str);
+        }
+        i++;
+    }
+    return (NULL);
 }
 
-void	cmd2(char **argv, char **env, int fd[2])
+char *check_path(char **tab, char *cmd)
 {
-	int	outfd;
-	// printf("cmd2||fd0:%d fd1:%d\n", fd[0], fd[1]);
-	outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	if (outfd == -1)
-		ft_close(fd, -1, EXIT);
-	if (dup2(outfd, 1) == -1)
-		ft_close(fd, outfd, EXIT);
-	if (dup2(fd[0], 0) == -1)
-		ft_close(fd, outfd, EXIT);
-	close(fd[1]);
-	if (exec(argv[3], env) == -1)
-		ft_close(fd, outfd, EXIT);
-	close(outfd);
-	// close(fd[1]);
-	close(fd[0]);
-	// ft_close(fd, outfd, NOEXIT);
-}
-
-int	main(int argc, char **argv, char **env)
-{
-	int	fd[2];
-	int	id1;
-
-	if (argc == 5)
+	int i = 0;
+	char *temp;
+	char *temp2;
+	while (tab[i])
 	{
+		temp = ft_strjoin(tab[i], "/");
+		temp2 = ft_strjoin(temp, cmd);
+		if (access(temp2, X_OK) == 0)
+			return (temp2);
+		i++;
+	}
+	return (NULL);
+}
+
+void exec(char *arg, char **env)
+{
+	char *str = get_path(env);
+	// printf("%s\n", str);
+	char **envpath = ft_split(str, ':');
+	// ft_print_tab(envpath);
+
+	char **tab = ft_split(arg, ' ');
+	char *path = check_path(envpath, tab[0]);
+	printf("path:%s\n", path);
+	if (!path)
+		exit(EXIT_FAILURE);
+	execve(path, tab, env);
+}
+
+int main(int argc, char **argv, char **env)
+{
+    if (argc == 5)
+    {
+	    int fd[2];
 		if (pipe(fd) == -1)
+		{
+			perror("pipe");
 			exit(EXIT_FAILURE);
-		// printf("main||fd0:%d fd1:%d\n", fd[0], fd[1]);
-		id1 = fork();
-		if (id1 == -1)
-			ft_close(fd, -1, EXIT);
-		if (id1 == 0)
-		{
-			cmd1(argv, env, fd);
 		}
-		else
-		{
-			cmd2(argv, env, fd);
-		}
-		// ft_close(fd, -1, NOEXIT);
-		close(fd[0]);
-		close(fd[1]);
+	    int id1 = fork();
+	    if (id1 == -1)
+	    	exit(EXIT_FAILURE);
+	    if (id1 == 0)
+	    {
+	    	// int infd = open("infile", O_WRONLY | O_CREAT, 0777);
+	      	int infd = open(argv[1], O_RDONLY | O_CREAT, 0777);
+	    	dup2(infd, 0);
+	    	dup2(fd[1], 1);
+	    	close(fd[0]);
+	    	// char *cmd1 = ft_split(argv[2], " ");
+	    	exec(argv[2], env);
+	    	close(fd[1]);
+	    	// exec("shuf -i 1-10 -n 5", env);
+	    }
+	    else
+	    {
+	    	int outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	    	// int outfd = open(argv[4], O_WRONLY | O_APPEND | O_CREAT, 0777);
+
+	    	dup2(outfd, 1);
+	    	dup2(fd[0], 0);
+
+	    	// char newread[50000];
+	    	// int readfd = read(fd[0], newread, 50000);
+	    	// newread[readfd] = 0;
+	    	// printf("%s\n", newread);
+
+	    	// exec("grep kev", env);
+	    	// wait(NULL);
+	    	// printf("tet=st");
+	    	
+
+	    	close(fd[1]);
+	    	// exec("wc -l", env);
+	    	exec(argv[3], env);
+	    	close(fd[0]);
+	    	// wait(NULL);
+	    	// exec("wc -m", env);
+	    	
+	    	// wait();
+	    	
+	    }
 	}
 	return (0);
-}
+    // exec("", env);
+
+
 
 /*
     if (argc == 5)
@@ -106,6 +145,8 @@ int	main(int argc, char **argv, char **env)
 	    }
 	}
 	*/
+}
+
 
 /*
 int main(int argc, char **argv)
