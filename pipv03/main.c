@@ -26,7 +26,7 @@ void	cmd1(char **argv, char **env, int fd[2])
 	close(fd[0]);
 	exec(argv[2], env);
 		// ft_close(fd, infd, EXIT);
-	// close(infd);
+	close(infd);
 	// ft_close(fd, infd, NOEXIT);
 	close(fd[1]);
 	// close(fd[0]);
@@ -46,7 +46,7 @@ void	cmd2(char **argv, char **env, int fd[2])
 	close(fd[1]);
 	exec(argv[3], env);
 		// ft_close(fd, outfd, EXIT);
-	// close(outfd);
+	close(outfd);
 	// close(fd[1]);
 	close(fd[0]);
 	// ft_close(fd, outfd, NOEXIT);
