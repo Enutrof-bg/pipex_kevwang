@@ -1,7 +1,22 @@
     
 #include "pipex.h"
 
-int main(/*int argc, char *argv[]*/)
+int main(int argc, char **argv, char **env)
+{
+    (void)argc;
+    (void)argv;
+    (void)env;
+    int i = 0;
+    while (env[i])
+    {
+        ft_printf("%s\n", env[i]);
+        i++;
+    }
+
+}
+
+/*
+int main(int argc, char *argv[])
 {
 
     char *args[3];
@@ -41,8 +56,7 @@ int main(/*int argc, char *argv[]*/)
         // dup2(fd[1], 1);clear
     // dup2(fdopen, 1);
     execve("/bin/ls", args, NULL);
-    perror("execve");   /* execve() ne retourne qu'en cas d'erreur */
-
+    perror("execve");   
     // close(fd[1]);
     // readfd = read(fd[0], test, 5000);
     // dup2(1, fd[1]);
@@ -51,7 +65,7 @@ int main(/*int argc, char *argv[]*/)
     // dup2(fd[0] , 0);
 
     // execve("/bin/wc", args, NULL);
-    // perror("execve");   /* execve() ne retourne qu'en cas d'erreur */
+    // perror("execve");  
         // close(fd[0]);
         // close(fd[1]);
         // exit(EXIT_FAILURE);
@@ -80,3 +94,4 @@ int main(/*int argc, char *argv[]*/)
     // waitpid(id2, NULL, 0);
     return 0;
 }
+*/

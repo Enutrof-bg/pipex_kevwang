@@ -19,5 +19,12 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/wait.h> //for wait()
+#include "ft_printf/ft_printf.h"
 
+// int	ft_printf(const char *str, ...);
+char	**ft_split(char const *s, char c);
+char	*ft_strjoin(char const *s1, char const *s2);
+size_t	ft_strlen(const char *str);
+int	ft_strncmp(char *s1, char *s2, unsigned int n);
+void ft_print_tab(char **tab);
 #endif

@@ -12,6 +12,148 @@
 
 #include "pipex.h"
 
+char *get_path(char **env)
+{
+	char *str;
+    int i = 0;
+    while (env[i])
+    {
+        if (ft_strncmp(env[i], "PATH", 4) == 0)
+        {
+        	str = env[i];
+        	str = str+5;
+        	return (str);
+        }
+        i++;
+    }
+    return (NULL);
+}
+
+char *check_path(char **tab, char *cmd)
+{
+	int i = 0;
+	char *temp;
+	char *temp2;
+	while (tab[i])
+	{
+		temp = ft_strjoin(tab[i], "/");
+		temp2 = ft_strjoin(temp, cmd);
+		if (access(temp2, X_OK) == 0)
+			return (temp2);
+		i++;
+	}
+	return (NULL);
+}
+
+void exec(char *arg, char **env)
+{
+	char *str = get_path(env);
+	// printf("%s\n", str);
+	char **envpath = ft_split(str, ':');
+	// ft_print_tab(envpath);
+
+	char **tab = ft_split(arg, ' ');
+	char *path = check_path(envpath, tab[0]);
+	printf("path:%s\n", path);
+	if (!path)
+		exit(EXIT_FAILURE);
+	execve(path, tab, env);
+}
+
+int main(int argc, char **argv, char **env)
+{
+    (void)argc;
+    (void)argv;
+    (void)env;
+
+    // exec("ls -l", env);
+    // ft_print_tab(env);
+    if (argc == 5)
+    {
+	    int fd[2];
+		pipe(fd);//if == -1
+
+	    int id1 = fork(); // if id1 == -1
+
+
+	    if (id1 == 0)
+	    {
+	    	// int infd = open("infile", O_WRONLY | O_CREAT, 0777);
+	      	int infd = open(argv[1], O_RDONLY | O_CREAT, 0777);
+	    	dup2(infd, 0);
+	    	dup2(fd[1], 1);
+
+	    	close(fd[0]);
+	    	// char *cmd1 = ft_split(argv[2], " ");
+	    	exec(argv[2], env);
+	    
+	    	close(fd[1]);
+	    	// exec("shuf -i 1-10 -n 5", env);
+	    }
+	    else
+	    {
+	    	int outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	    	// int outfd = open(argv[4], O_WRONLY | O_APPEND | O_CREAT, 0777);
+
+	    	dup2(outfd, 1);
+	    	dup2(fd[0], 0);
+
+	    	// char newread[50000];
+	    	// int readfd = read(fd[0], newread, 50000);
+	    	// newread[readfd] = 0;
+	    	// printf("%s\n", newread);
+
+	    	// exec("grep kev", env);
+	    	// wait(NULL);
+	    	// printf("tet=st");
+	    	
+
+	    	close(fd[1]);
+	    	// exec("wc -l", env);
+	    	exec(argv[3], env);
+	    	close(fd[0]);
+	    	// wait(NULL);
+	    	// exec("wc -m", env);
+	    	
+	    	// wait();
+	    	
+	    }
+	}
+	return (0);
+    // exec("", env);
+
+
+
+/*
+    if (argc == 5)
+    {
+	    int fd[2];
+	    pipe(fd);
+
+	    int id1 = fork();
+	    if (id1 == 0)
+	    {
+	    	int infd = open(argv[1], O_RDONLY | O_CREAT, 0777);
+	    	dup2(infd, 0);
+	    	dup2(fd[1], 1);
+	    	// close(fd[0]);
+	    	exec(argv[2], env);
+	    }
+	    else 
+	    {
+	    	int outfd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	    	dup2(outfd, 1);
+	    	dup2(fd[0], 0);
+	    	// close(fd[1]);
+	    	exec(argv[3], env);
+	    	wait(NULL);
+	    }
+	}
+	*/
+}
+
+
+/*
 int main(int argc, char **argv)
 {
 	(void)argc;
@@ -68,7 +210,7 @@ int main(int argc, char **argv)
 		printf("total:%d\n", total);
 		wait(NULL);
 	}
-	/*
+	
 	int id1 = fork();
 	int id2 = fork();
 	if (id1 == 0)
@@ -97,8 +239,9 @@ int main(int argc, char **argv)
 	{
 		printf("Waiting child to finish.\n");
 	}
-	*/
+	
 	// printf("id:%d\n", id1);
 	// printf("id:%d\n", id2);
 	return (0);
 }
+*/

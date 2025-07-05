@@ -16,9 +16,17 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = pipex
 
-FILE = main.c
+FILE = main.c \
+ft_split.c \
+ft_strjoin.c \
+pipex_utlis.c
 
 INCLUDE = -Lft_printf -lftprintf
+
+# DIRPRINT = ft_printf
+
+# FILEPRINTF = ${DIRPRINT}/ft_printf.o ${DIRPRINT}/ft_putcharstr.o ${DIRPRINT}/ft_puthexa.o \
+# ${DIRPRINT}/ft_putnbr.o ${DIRPRINT}/ft_putptr.o ${DIRPRINT}/ft_putunsigned.o
 
 SRC = ${FILE:.c=.o}
 
@@ -33,9 +41,13 @@ ${NAME}:${SRC}
 
 clean:
 	make clean -C ft_printf
-	rm -f infile
-	rm -f a.out
-	rm -f main.o
+	rm -f a.out \
+	outfile \
+	in.txt \
+	main.o \
+	ft_split.o \
+	ft_strjoin.o \
+	pipex_utlis.o
 
 fclean:clean
 	make fclean -C ft_printf
