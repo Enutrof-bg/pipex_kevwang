@@ -31,17 +31,6 @@ char	*get_path(char **env)
 	return (NULL);
 }
 
-void ft_free(char **tab1, char **tab2, char *str)
-{
-	if (tab1)
-		ft_free_double_tab(tab1);
-	if (tab2)
-		ft_free_double_tab(tab2);
-	if (str)
-		free(str);
-	exit(EXIT_FAILURE);
-}
-
 char	*check_path(char **tab, char **cmd)
 {
 	int		i;
@@ -53,21 +42,10 @@ char	*check_path(char **tab, char **cmd)
 	{
 		temp = ft_strjoin(tab[i], "/");
 		if (!temp)
-		{
-			// ft_free_double_tab(cmd);
-			// ft_free_double_tab(tab);
-			// exit(EXIT_FAILURE);
-			ft_free(cmd, tab, NULL);
-		}
+			return (NULL);
 		temp2 = ft_strjoin(temp, cmd[0]);
 		if (!temp2)
-		{
-			// ft_free_double_tab(cmd);
-			// ft_free_double_tab(tab);
-			// free(temp);
-			// exit(EXIT_FAILURE);
-			ft_free(cmd, tab, temp);
-		}
+			return (NULL);
 		free(temp);
 		if (access(temp2, X_OK) == 0)
 			return (temp2);
@@ -77,7 +55,7 @@ char	*check_path(char **tab, char **cmd)
 	return (NULL);
 }
 
-void	exec(char *arg, char **env)
+int	exec(char *arg, char **env)
 {
 	char	*str;
 	char	**envpath;
@@ -87,25 +65,15 @@ void	exec(char *arg, char **env)
 	str = get_path(env);
 	envpath = ft_split(str, ':');
 	if (!envpath)
-		exit(EXIT_FAILURE);
+		return (-1);
 	tab = ft_split(arg, ' ');
 	if (!tab)
-	{
-		// ft_free_double_tab(envpath);
-		// exit(EXIT_FAILURE);
-		ft_free(envpath, NULL, NULL);
-	}
+		return (ft_free(envpath, NULL, NULL), -1);
 	path = check_path(envpath, tab);
 	if (!path)
-	{
-		// ft_free_double_tab(envpath);
-		// ft_free_double_tab(tab);
-		// exit(EXIT_FAILURE);
-		ft_free(envpath, tab, NULL);
-	}
-	execve(path, tab, env);
-	// ft_free_double_tab(envpath);
-	// ft_free_double_tab(tab);
-	// free(path);
+		return (ft_free(envpath, tab, NULL), -1);
+	if (execve(path, tab, env) == -1)
+		return (ft_free(envpath, tab, path), -1);
 	ft_free(envpath, tab, path);
+	return (0);
 }

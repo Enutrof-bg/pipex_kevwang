@@ -1,51 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utlis.c                                      :+:      :+:    :+:   */
+/*   pipex_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kevwang <kevwang@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/05 10:48:28 by kevwang           #+#    #+#             */
-/*   Updated: 2025/07/05 10:48:29 by kevwang          ###   ########.fr       */
+/*   Created: 2025/07/05 18:24:20 by kevwang           #+#    #+#             */
+/*   Updated: 2025/07/05 18:24:21 by kevwang          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-size_t	ft_strlen(const char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
-int	ft_strncmp(char *s1, char *s2, unsigned int n)
-{	
-	unsigned int	i;
-
-	i = 0;
-	if (n == 0)
-		return (0);
-	while (s1[i] && s2[i] && i < n - 1 && s1[i] == s2[i])
-	{
-			i++;
-	}
-	return (s1[i] - s2[i]);
-}
-
-void	ft_print_tab(char **tab)
+void	ft_free_double_tab(char **tab)
 {
 	int	i;
 
 	i = 0;
 	while (tab[i])
 	{
-		ft_printf("%s\n", tab[i]);
+		free(tab[i]);
 		i++;
 	}
+	free(tab);
+}
+
+void	ft_free(char **tab1, char **tab2, char *str)
+{
+	if (tab1)
+		ft_free_double_tab(tab1);
+	if (tab2)
+		ft_free_double_tab(tab2);
+	if (str)
+		free(str);
+}
+
+void	ft_close(int fd[2], int fd2)
+{
+	if (fd[0])
+		close(fd[0]);
+	if (fd[1])
+		close(fd[1]);
+	if (fd2 != -1)
+		close (fd2);
 }

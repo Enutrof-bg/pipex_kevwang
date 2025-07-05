@@ -26,7 +26,9 @@ char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *str);
 int		ft_strncmp(char *s1, char *s2, unsigned int n);
 void	ft_print_tab(char **tab);
-void	exec(char *arg, char **env);
+int		exec(char *arg, char **env);
 void	ft_free_double_tab(char **tab);
+void	ft_close(int fd[2], int fd2);
+void	ft_free(char **tab1, char **tab2, char *str);
 
 #endif

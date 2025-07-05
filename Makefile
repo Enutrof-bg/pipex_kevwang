@@ -20,7 +20,8 @@ FILE = main.c \
 ft_split.c \
 ft_strjoin.c \
 pipex_utlis.c \
-pipex_path.c
+pipex_path.c \
+pipex_free.c
 
 INCLUDE = -Lft_printf -lftprintf
 
@@ -49,7 +50,8 @@ clean:
 	ft_split.o \
 	ft_strjoin.o \
 	pipex_utlis.o \
-	pipex_path.o
+	pipex_path.o \
+	pipex_free.o
 
 fclean:clean
 	make fclean -C ft_printf
