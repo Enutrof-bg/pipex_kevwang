@@ -54,6 +54,8 @@ void	cmd2(char **argv, char **env, int fd[2])
 
 int	main(int argc, char **argv, char **env)
 {
+	(void)argv;
+	(void)env;
 	int	fd[2];
 	int	id1;
 
@@ -73,7 +75,7 @@ int	main(int argc, char **argv, char **env)
 		{
 			cmd2(argv, env, fd);
 		}
-		// ft_close(fd, -1, NOEXIT);
+		ft_close(fd, -1, NOEXIT);
 		// close(fd[0]);
 		// close(fd[1]);
 	}
