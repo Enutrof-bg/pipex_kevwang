@@ -12,112 +12,60 @@
 
 #include "pipex.h"
 
-char *get_path(char **env)
+void	cmd1(char **argv, char **env, int fd[2])
 {
-	char *str;
-    int i = 0;
-    while (env[i])
-    {
-        if (ft_strncmp(env[i], "PATH", 4) == 0)
-        {
-        	str = env[i];
-        	str = str+5;
-        	return (str);
-        }
-        i++;
-    }
-    return (NULL);
-}
+	int	infd;
 
-char *check_path(char **tab, char *cmd)
-{
-	int i = 0;
-	char *temp;
-	char *temp2;
-	while (tab[i])
-	{
-		temp = ft_strjoin(tab[i], "/");
-		temp2 = ft_strjoin(temp, cmd);
-		if (access(temp2, X_OK) == 0)
-			return (temp2);
-		i++;
-	}
-	return (NULL);
-}
-
-void exec(char *arg, char **env)
-{
-	char *str = get_path(env);
-	// printf("%s\n", str);
-	char **envpath = ft_split(str, ':');
-	// ft_print_tab(envpath);
-
-	char **tab = ft_split(arg, ' ');
-	char *path = check_path(envpath, tab[0]);
-	printf("path:%s\n", path);
-	if (!path)
+	infd = open(argv[1], O_RDONLY, 0777);
+	if (dup2(infd, 0) == -1)
 		exit(EXIT_FAILURE);
-	execve(path, tab, env);
+	if (dup2(fd[1], 1) == -1)
+		exit(EXIT_FAILURE);
+	close(fd[0]);
+	exec(argv[2], env);
+	close(fd[1]);
 }
 
-int main(int argc, char **argv, char **env)
+void	cmd2(char **argv, char **env, int fd[2])
 {
-    if (argc == 5)
-    {
-	    int fd[2];
+	int	outfd;
+
+	outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	if (dup2(outfd, 1) == -1)
+		exit(EXIT_FAILURE);
+	if (dup2(fd[0], 0) == -1)
+		exit(EXIT_FAILURE);
+	close(fd[1]);
+	exec(argv[3], env);
+	close(fd[0]);
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	int	fd[2];
+	int	id1;
+
+	if (argc == 5)
+	{
 		if (pipe(fd) == -1)
 		{
 			perror("pipe");
 			exit(EXIT_FAILURE);
 		}
-	    int id1 = fork();
-	    if (id1 == -1)
-	    	exit(EXIT_FAILURE);
-	    if (id1 == 0)
-	    {
-	    	// int infd = open("infile", O_WRONLY | O_CREAT, 0777);
-	      	int infd = open(argv[1], O_RDONLY | O_CREAT, 0777);
-	    	dup2(infd, 0);
-	    	dup2(fd[1], 1);
-	    	close(fd[0]);
-	    	// char *cmd1 = ft_split(argv[2], " ");
-	    	exec(argv[2], env);
-	    	close(fd[1]);
-	    	// exec("shuf -i 1-10 -n 5", env);
-	    }
-	    else
-	    {
-	    	int outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	    	// int outfd = open(argv[4], O_WRONLY | O_APPEND | O_CREAT, 0777);
-
-	    	dup2(outfd, 1);
-	    	dup2(fd[0], 0);
-
-	    	// char newread[50000];
-	    	// int readfd = read(fd[0], newread, 50000);
-	    	// newread[readfd] = 0;
-	    	// printf("%s\n", newread);
-
-	    	// exec("grep kev", env);
-	    	// wait(NULL);
-	    	// printf("tet=st");
-	    	
-
-	    	close(fd[1]);
-	    	// exec("wc -l", env);
-	    	exec(argv[3], env);
-	    	close(fd[0]);
-	    	// wait(NULL);
-	    	// exec("wc -m", env);
-	    	
-	    	// wait();
-	    	
-	    }
+		id1 = fork();
+		if (id1 == -1)
+			exit(EXIT_FAILURE);
+		if (id1 == 0)
+		{
+			cmd1(argv, env, fd);
+		}
+		else
+		{
+			cmd2(argv, env, fd);
+		}
 	}
 	return (0);
-    // exec("", env);
-
-
+}
 
 /*
     if (argc == 5)
@@ -145,8 +93,6 @@ int main(int argc, char **argv, char **env)
 	    }
 	}
 	*/
-}
-
 
 /*
 int main(int argc, char **argv)

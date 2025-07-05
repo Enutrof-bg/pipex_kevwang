@@ -43,7 +43,7 @@ int	ft_printf(const char *str, ...)
 	int		i;
 	va_list	args;
 	int		count;
-//char *str == 0  char *str == NULL
+
 	if (!str)
 		return (-1);
 	count = 0;

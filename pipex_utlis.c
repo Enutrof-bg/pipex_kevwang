@@ -38,12 +38,27 @@ int	ft_strncmp(char *s1, char *s2, unsigned int n)
 	return (s1[i] - s2[i]);
 }
 
-void ft_print_tab(char **tab)
+void	ft_print_tab(char **tab)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (tab[i])
 	{
 		ft_printf("%s\n", tab[i]);
 		i++;
 	}
+}
+
+void	ft_free_double_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
 }
