@@ -62,31 +62,26 @@ void exec(char *arg, char **env)
 
 int main(int argc, char **argv, char **env)
 {
-    (void)argc;
-    (void)argv;
-    (void)env;
-
-    // exec("ls -l", env);
-    // ft_print_tab(env);
     if (argc == 5)
     {
 	    int fd[2];
-		pipe(fd);//if == -1
-
-	    int id1 = fork(); // if id1 == -1
-
-
+		if (pipe(fd) == -1)
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
+	    int id1 = fork();
+	    if (id1 == -1)
+	    	exit(EXIT_FAILURE);
 	    if (id1 == 0)
 	    {
 	    	// int infd = open("infile", O_WRONLY | O_CREAT, 0777);
 	      	int infd = open(argv[1], O_RDONLY | O_CREAT, 0777);
 	    	dup2(infd, 0);
 	    	dup2(fd[1], 1);
-
 	    	close(fd[0]);
 	    	// char *cmd1 = ft_split(argv[2], " ");
 	    	exec(argv[2], env);
-	    
 	    	close(fd[1]);
 	    	// exec("shuf -i 1-10 -n 5", env);
 	    }
