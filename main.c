@@ -15,7 +15,7 @@
 void	cmd1(char **argv, char **env, int fd[2])
 {
 	int	infd;
-
+	// printf("cmd1||fd0:%d fd1:%d\n", fd[0], fd[1]);
 	infd = open(argv[1], O_RDONLY, 0777);
 	if (infd == -1)
 		ft_close(fd, -1, EXIT);
@@ -26,13 +26,16 @@ void	cmd1(char **argv, char **env, int fd[2])
 	close(fd[0]);
 	if (exec(argv[2], env) == -1)
 		ft_close(fd, infd, EXIT);
-	ft_close(fd, infd, NOEXIT);
+	close(infd);
+	// ft_close(fd, infd, NOEXIT);
+	close(fd[1]);
+	// close(fd[0]);
 }
 
 void	cmd2(char **argv, char **env, int fd[2])
 {
 	int	outfd;
-
+	// printf("cmd2||fd0:%d fd1:%d\n", fd[0], fd[1]);
 	outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
 	if (outfd == -1)
 		ft_close(fd, -1, EXIT);
@@ -43,7 +46,10 @@ void	cmd2(char **argv, char **env, int fd[2])
 	close(fd[1]);
 	if (exec(argv[3], env) == -1)
 		ft_close(fd, outfd, EXIT);
-	ft_close(fd, outfd, NOEXIT);
+	close(outfd);
+	// close(fd[1]);
+	close(fd[0]);
+	// ft_close(fd, outfd, NOEXIT);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -55,6 +61,7 @@ int	main(int argc, char **argv, char **env)
 	{
 		if (pipe(fd) == -1)
 			exit(EXIT_FAILURE);
+		// printf("main||fd0:%d fd1:%d\n", fd[0], fd[1]);
 		id1 = fork();
 		if (id1 == -1)
 			ft_close(fd, -1, EXIT);
@@ -66,6 +73,9 @@ int	main(int argc, char **argv, char **env)
 		{
 			cmd2(argv, env, fd);
 		}
+		// ft_close(fd, -1, NOEXIT);
+		close(fd[0]);
+		close(fd[1]);
 	}
 	return (0);
 }
