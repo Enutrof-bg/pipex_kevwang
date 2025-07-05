@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
-//test
+
 void	cmd1(char **argv, char **env, int fd[2])
 {
 	int	infd;
