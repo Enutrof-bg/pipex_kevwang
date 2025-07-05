@@ -45,7 +45,7 @@ char	*check_path(char **tab, char **cmd)
 			return (NULL);
 		temp2 = ft_strjoin(temp, cmd[0]);
 		if (!temp2)
-			return (NULL);
+			return (free(temp), NULL);
 		free(temp);
 		if (access(temp2, X_OK) == 0)
 			return (temp2);

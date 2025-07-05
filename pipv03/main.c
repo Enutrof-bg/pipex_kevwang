@@ -59,6 +59,10 @@ int	main(int argc, char **argv, char **env)
 	int	fd[2];
 	int	id1;
 
+	if (argc == 2)
+	{
+		exec(argv[1], env);
+	}
 	if (argc == 5)
 	{
 		if (pipe(fd) == -1)
