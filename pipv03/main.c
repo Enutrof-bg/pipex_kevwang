@@ -62,7 +62,7 @@ void	cmd1b(char argc, char **argv, char **env, int fd[2])
 	int	infd;
 	(void)argc;
 	infd = open(argv[1], O_RDONLY, 0777);
-	printf("cmd1||fd0:%d fd1:%d infd:%d\n", fd[0], fd[1], infd);
+	// printf("cmd1||fd0:%d fd1:%d infd:%d\n", fd[0], fd[1], infd);
 	if (infd == -1)
 		ft_close(fd, -1, EXIT);
 	if (dup2(infd, 0) == -1)
@@ -86,7 +86,7 @@ void	cmd2b(char argc, char **argv, char **env, int fd[2])
 
 	// waitpid(-1, NULL, 0);
 	outfd = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	printf("cmd2||fd0:%d fd1:%d outfd%d\n", fd[0], fd[1], outfd);
+	// printf("cmd2||fd0:%d fd1:%d outfd%d\n", fd[0], fd[1], outfd);
 	if (outfd == -1)
 		ft_close(fd, -1, EXIT);
 	if (dup2(outfd, 1) == -1)
@@ -147,7 +147,7 @@ int	main(int argc, char **argv, char **env)
 	{
 		if (pipe(fd) == -1)
 			exit(EXIT_FAILURE);
-		printf("main||fd0:%d fd1:%d\n", fd[0], fd[1]);
+		// printf("main||fd0:%d fd1:%d\n", fd[0], fd[1]);
 		id1 = fork();
 		if (id1 == -1)
 			ft_close(fd, -1, EXIT);
