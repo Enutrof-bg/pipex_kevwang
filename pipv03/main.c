@@ -15,17 +15,19 @@
 void	cmd1(char **argv, char **env, int fd[2])
 {
 	int	infd;
-	// printf("cmd1||fd0:%d fd1:%d\n", fd[0], fd[1]);
+
 	infd = open(argv[1], O_RDONLY, 0777);
-	// if (infd == -1)
-	// 	ft_close(fd, -1, EXIT);
-	dup2(infd, 0);
-		// ft_close(fd, infd, EXIT);
-	dup2(fd[1], 1);
-		// ft_close(fd, infd, EXIT);
+	printf("cmd1||fd0:%d fd1:%d infd:%d\n", fd[0], fd[1], infd);
+	if (infd == -1)
+		ft_close(fd, -1, EXIT);
+	if (dup2(infd, 0) == -1)
+		ft_close(fd, infd, EXIT);
+	if (dup2(fd[1], 1) == -1)
+		ft_close(fd, infd, EXIT);
 	close(fd[0]);
-	exec(argv[2], env);
-		// ft_close(fd, infd, EXIT);
+	if (exec(argv[2], env) == -1)
+		ft_close(fd, infd, EXIT);
+	// close(fd[0]);
 	close(infd);
 	// ft_close(fd, infd, NOEXIT);
 	close(fd[1]);
@@ -35,17 +37,19 @@ void	cmd1(char **argv, char **env, int fd[2])
 void	cmd2(char **argv, char **env, int fd[2])
 {
 	int	outfd;
-	// printf("cmd2||fd0:%d fd1:%d\n", fd[0], fd[1]);
+
+	// waitpid(-1, NULL, 0);
 	outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	// if (outfd == -1)
-		// ft_close(fd, -1, EXIT);
-	dup2(outfd, 1);
-		// ft_close(fd, outfd, EXIT);
-	dup2(fd[0], 0);
-		// ft_close(fd, outfd, EXIT);
+	printf("cmd2||fd0:%d fd1:%d outfd%d\n", fd[0], fd[1], outfd);
+	if (outfd == -1)
+		ft_close(fd, -1, EXIT);
+	if (dup2(outfd, 1) == -1)
+		ft_close(fd, outfd, EXIT);
+	if (dup2(fd[0], 0) == -1)
+		ft_close(fd, outfd, EXIT);
 	close(fd[1]);
-	exec(argv[3], env);
-		// ft_close(fd, outfd, EXIT);
+	if (exec(argv[3], env) == -1)
+		ft_close(fd, outfd, EXIT);
 	close(outfd);
 	// close(fd[1]);
 	close(fd[0]);
@@ -59,15 +63,30 @@ int	main(int argc, char **argv, char **env)
 	int	fd[2];
 	int	id1;
 
+	// int	outfd;
+	// outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	// int	infd;
+	// infd = open(argv[1], O_RDONLY, 0777);
+	// char *args[3];
+	// args[0] = "ls";
+	// args[1] = "-l";
+	// args[2] = NULL;
 	if (argc == 2)
 	{
-		exec(argv[1], env);
+		// exec(argv[1], env);
+		// execve("/bin/ls", args,NULL);
+		pipe(fd);
+		// ft_close(fd, -1, NOEXIT);
+		int	infd;
+		// printf("cmd1||fd0:%d fd1:%d\n", fd[0], fd[1]);
+		infd = open(argv[1], O_RDONLY, 0777);
+		ft_close(fd, infd, NOEXIT);
 	}
 	if (argc == 5)
 	{
 		if (pipe(fd) == -1)
 			exit(EXIT_FAILURE);
-		// printf("main||fd0:%d fd1:%d\n", fd[0], fd[1]);
+		printf("main||fd0:%d fd1:%d\n", fd[0], fd[1]);
 		id1 = fork();
 		if (id1 == -1)
 			ft_close(fd, -1, EXIT);
@@ -80,8 +99,8 @@ int	main(int argc, char **argv, char **env)
 			cmd2(argv, env, fd);
 		}
 		ft_close(fd, -1, NOEXIT);
-		// close(fd[0]);
-		// close(fd[1]);
+		close(fd[0]);
+		close(fd[1]);
 	}
 	return (0);
 }
@@ -108,7 +127,7 @@ int	main(int argc, char **argv, char **env)
 	    	dup2(fd[0], 0);
 	    	// close(fd[1]);
 	    	exec(argv[3], env);
-	    	wait(NULL);
+	    	wa/it(NULL);
 	    }
 	}
 	*/
