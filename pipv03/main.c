@@ -57,6 +57,66 @@ void	cmd2(char **argv, char **env, int fd[2])
 	// ft_close(fd, outfd, NOEXIT);
 }
 
+void	cmd1b(char argc, char **argv, char **env, int fd[2])
+{
+	int	infd;
+	(void)argc;
+	infd = open(argv[1], O_RDONLY, 0777);
+	printf("cmd1||fd0:%d fd1:%d infd:%d\n", fd[0], fd[1], infd);
+	if (infd == -1)
+		ft_close(fd, -1, EXIT);
+	if (dup2(infd, 0) == -1)
+		ft_close(fd, infd, EXIT);
+	if (dup2(fd[1], 1) == -1)
+		ft_close(fd, infd, EXIT);
+	close(fd[0]);
+	if (exec(argv[2], env) == -1)
+		ft_close(fd, infd, EXIT);
+	close(fd[1]);
+	// close(fd[0]);
+	close(infd);
+	// ft_close(fd, infd, NOEXIT);
+	// close(fd[1]);
+	// close(fd[0]);
+}
+
+void	cmd2b(char argc, char **argv, char **env, int fd[2])
+{
+	int	outfd;
+
+	// waitpid(-1, NULL, 0);
+	outfd = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	printf("cmd2||fd0:%d fd1:%d outfd%d\n", fd[0], fd[1], outfd);
+	if (outfd == -1)
+		ft_close(fd, -1, EXIT);
+	if (dup2(outfd, 1) == -1)
+		ft_close(fd, outfd, EXIT);
+	if (dup2(fd[0], 0) == -1)
+		ft_close(fd, outfd, EXIT);
+	close(fd[1]);
+	if (exec(argv[argc - 2], env) == -1)
+		ft_close(fd, outfd, EXIT);
+	close(outfd);
+	// close(fd[1]);
+	close(fd[0]);
+	// ft_close(fd, outfd, NOEXIT);
+}
+
+void cmdmid(char argc, char **argv, char **env, int fd[2], int fd2[2])
+{
+	(void)argc;
+	dup2(fd[1], fd2[0]);
+	dup2(fd[0], fd2[1]);
+
+	close(fd2[0]);
+	close(fd2[1]);
+	
+	exec(argv[3], env);
+
+	close(fd[1]);
+	close(fd[0]);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	(void)argv;
@@ -102,6 +162,30 @@ int	main(int argc, char **argv, char **env)
 		ft_close(fd, -1, NOEXIT);
 		// close(fd[0]);
 		// close(fd[1]);
+	}
+	if (argc >= 6)
+	{
+		pipe(fd);
+		int id1 = fork();
+
+		if (id1 == 0)
+		{
+			int fd2[2];
+			pipe(fd2);
+			int id2 = fork();
+			if (id2 == 0)
+			{
+				cmd1b(argc, argv, env, fd2);
+			}
+			else
+			{
+				cmdmid(argc, argv, env, fd, fd2);
+			}
+		}
+		else
+		{
+			cmd2b(argc, argv, env, fd);
+		}
 	}
 	return (0);
 }
