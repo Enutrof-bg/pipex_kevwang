@@ -54,7 +54,7 @@ clean:
 	pipex_free.o
 
 fclean:clean
-	make fclean -C ft_printf
+	rm -f ft_printf/libftprintf.a
 	rm -f pipex
 
 re:fclean

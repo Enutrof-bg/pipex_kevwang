@@ -27,10 +27,11 @@ void	cmd1(char **argv, char **env, int fd[2])
 	close(fd[0]);
 	if (exec(argv[2], env) == -1)
 		ft_close(fd, infd, EXIT);
+	close(fd[1]);
 	// close(fd[0]);
 	close(infd);
 	// ft_close(fd, infd, NOEXIT);
-	close(fd[1]);
+	// close(fd[1]);
 	// close(fd[0]);
 }
 
@@ -99,8 +100,8 @@ int	main(int argc, char **argv, char **env)
 			cmd2(argv, env, fd);
 		}
 		ft_close(fd, -1, NOEXIT);
-		close(fd[0]);
-		close(fd[1]);
+		// close(fd[0]);
+		// close(fd[1]);
 	}
 	return (0);
 }
