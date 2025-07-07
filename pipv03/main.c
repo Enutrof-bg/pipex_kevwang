@@ -188,27 +188,93 @@ int	main(int argc, char **argv, char **env)
 	}
 	if (argc >= 6)
 	{
-		pipe(fd);
-		int id1 = fork();
+		int fd0[2];
 
+		pipe(fd0);
+		id1 = fork();
+		
 		if (id1 == 0)
 		{
-			int fd2[2];
-			pipe(fd2);
-			int id2 = fork();
+			pipe(fd);
+			id2 = fork();
+			// close(fd[0]);
+			// close(fd[1]);
+			// write(2, "test1\n", 6);
 			if (id2 == 0)
 			{
-				cmd1b(argc, argv, env, fd2);
+				int id3;
+				int fd2[2];
+
+				pipe(fd2);
+				id3 = fork();
+				if (id3 == 0)
+				{
+					int infd = open(argv[1], O_RDONLY, 0777);
+					dup2(infd, 0);
+					dup2(fd2[1], 1);
+					close(fd2[0]);
+					exec(argv[2], env);
+					close(fd2[1]);
+					// write(2, "test3\n", 6);
+				}
+				else
+				{
+					wait(NULL);
+					dup2(fd2[0], 0);
+					dup2(fd[1], 1);
+					close(fd2[1]);
+					exec(argv[3], env);
+					close(fd2[0]);
+
+
+					// char buff[50000];
+					// int readfd = read(fd2[0], buff, 50000);
+					// buff[readfd] = 0;
+					// printf("'%s'", buff);
+				}
 			}
 			else
 			{
-				cmdmid(argc, argv, env, fd, fd2);
+				wait(NULL);
+				dup2(fd[0], 0);
+				// dup2(fd0[1], 1);
+
+				close(fd[1]);
+				exec(argv[4], env);
+				close(fd[0]);
+
+
+
+				// char buff[50000];
+				// int readfd = read(0, buff, 50000);
+				// buff[readfd] = 0;
+				// printf("'%s'", buff);
+
+				close(fd[0]);
 			}
+			close(fd[1]);
+			close(fd[0]);
 		}
 		else
 		{
-			cmd2b(argc, argv, env, fd);
+			wait(NULL);
+			int openfd = open(argv[argc-1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+
+			dup2(openfd, 1);
+			dup2(fd0[0], 0);
+
+			close(fd0[1]);
+			exec(argv[5], env);
+			close(fd0[0]);
+
+			// char buff[50000];
+			// int readfd = read(0, buff, 50000);
+			// buff[readfd] = 0;
+			// printf("'%s'", buff);
+
 		}
+		close(fd0[0]);
+		close(fd0[1]);
 	}
 	return (0);
 }
