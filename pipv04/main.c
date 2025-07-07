@@ -227,6 +227,7 @@ int	main(int argc, char **argv, char **env)
 			{
 				wait(NULL);
 				dup2(fd[0], 0);
+				dup2(fd0[1], 1);
 				close(fd[1]);
 				exec(argv[4], env);
 				close(fd[0]);
