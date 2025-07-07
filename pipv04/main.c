@@ -223,6 +223,7 @@ int	main(int argc, char **argv, char **env)
 			close(fd0[0]);
 			exec(argv[2], env);
 			close(fd0[1]);
+			close(infd);
 		}
 		wait(NULL);
 
@@ -239,6 +240,11 @@ int	main(int argc, char **argv, char **env)
 			close(fd0[1]);
 			exec(argv[3], env);
 			close(fd1[0]);
+
+		close(fd0[0]);
+		// close(fd0[1]);
+		// close(fd1[0]);
+		close(fd1[1]);
 		}
 		wait(NULL);
 
@@ -255,6 +261,13 @@ int	main(int argc, char **argv, char **env)
 			close(fd1[1]);
 			exec(argv[4], env);
 			close(fd2[0]);
+
+		close(fd0[0]);
+		close(fd0[1]);
+		// close(fd1[0]);
+		close(fd1[1]);
+		// close(fd2[0]);
+		close(fd2[1]);
 		}
 		wait(NULL);
 
@@ -272,6 +285,16 @@ int	main(int argc, char **argv, char **env)
 			close(fd2[1]);
 			exec(argv[5], env);
 			close(fd3[0]);
+
+		close(fd0[0]);
+		close(fd0[1]);
+		close(fd1[0]);
+		close(fd1[1]);
+		// close(fd2[0]);
+		close(fd2[1]);
+		// close(fd3[0]);
+		close(fd3[1]);
+		close(outfd);
 		}
 		wait(NULL);
 
@@ -280,6 +303,10 @@ int	main(int argc, char **argv, char **env)
 		close(fd0[1]);
 		close(fd1[0]);
 		close(fd1[1]);
+		close(fd2[0]);
+		close(fd2[1]);
+		close(fd3[0]);
+		close(fd3[1]);
 
 
 
