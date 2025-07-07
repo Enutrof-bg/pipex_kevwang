@@ -57,6 +57,7 @@ void	cmd2(char **argv, char **env, int fd[2])
 	// ft_close(fd, outfd, NOEXIT);
 }
 
+/*
 void	cmd1b(char argc, char **argv, char **env, int fd[2])
 {
 	int	infd;
@@ -116,7 +117,7 @@ void cmdmid(char argc, char **argv, char **env, int fd[2], int fd2[2])
 	close(fd[1]);
 	close(fd[0]);
 }
-
+*/
 int	main(int argc, char **argv, char **env)
 {
 	(void)argv;
@@ -124,6 +125,8 @@ int	main(int argc, char **argv, char **env)
 	int	fd[2];
 	int	id1;
 	int id2;
+	int status;
+	(void)status;
 	(void)id2;
 	// int	outfd;
 	// outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
@@ -165,7 +168,25 @@ int	main(int argc, char **argv, char **env)
 		close(fd[0]);
 		close(fd[1]);
 		*/
-		
+
+		pipe(fd);
+		id1 = fork();
+		if (id1 == 0)
+		{
+			cmd1(argv, env, fd);
+		}
+
+		id2 = fork();
+		if (id2 == 0)
+		{
+			cmd2(argv, env, fd);
+		}
+		close(fd[0]);
+		close(fd[1]);
+		waitpid(id1, &status, 0);
+		waitpid(id2, &status, 0);
+
+	/*	
 		id1 = fork();
 		if (id1 == 0)
 		{
@@ -184,10 +205,85 @@ int	main(int argc, char **argv, char **env)
 		{
 			wait(NULL);
 		}
-		
+		*/
 	}
 	if (argc >= 6)
 	{
+
+		int fd0[2];
+		int id0;
+		pipe(fd0);
+		id0 = fork();
+		if (id0 == 0)
+		{
+			int infd = open(argv[1], O_RDONLY, 0777);
+
+			dup2(infd, 0);
+			dup2(fd0[1], 1);
+			close(fd0[0]);
+			exec(argv[2], env);
+			close(fd0[1]);
+		}
+		wait(NULL);
+
+
+		close(fd0[1]);
+		int fd1[2];
+		int id1;
+		pipe(fd1);
+		id1 = fork();
+		if (id1 == 0)
+		{
+			dup2(fd0[0], 0);
+			dup2(fd1[1], 1);
+			close(fd0[1]);
+			exec(argv[3], env);
+			close(fd1[0]);
+		}
+		wait(NULL);
+
+
+		close(fd1[1]);
+		int fd2[2];
+		int id2;
+		pipe(fd2);
+		id2 = fork();
+		if (id2 == 0)
+		{
+			dup2(fd1[0], 0);
+			dup2(fd2[1], 1);
+			close(fd1[1]);
+			exec(argv[4], env);
+			close(fd2[0]);
+		}
+		wait(NULL);
+
+
+		close(fd2[1]);
+		int fd3[2];
+		int id3;
+		pipe(fd3);
+		id3 = fork();
+		if (id3 == 0)
+		{
+			int outfd = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+			dup2(fd2[0], 0);
+			dup2(outfd, 1);
+			close(fd2[1]);
+			exec(argv[5], env);
+			close(fd3[0]);
+		}
+		wait(NULL);
+
+
+		close(fd0[0]);
+		close(fd0[1]);
+		close(fd1[0]);
+		close(fd1[1]);
+
+
+
+		/*
 		int fd0[2];
 
 		pipe(fd0);
@@ -231,7 +327,6 @@ int	main(int argc, char **argv, char **env)
 				close(fd[1]);
 				exec(argv[4], env);
 				close(fd[0]);
-				close(fd[0]);
 			}
 			close(fd[1]);
 			close(fd[0]);
@@ -240,15 +335,17 @@ int	main(int argc, char **argv, char **env)
 		{
 			wait(NULL);
 			int openfd = open(argv[argc-1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-			dup2(openfd, 1);
 			dup2(fd0[0], 0);
+			dup2(openfd, 1);
 			close(fd0[1]);
 			exec(argv[5], env);
 			close(fd0[0]);
 		}
 		close(fd0[0]);
 		close(fd0[1]);
+		*/
 	}
+
 	return (0);
 }
 
