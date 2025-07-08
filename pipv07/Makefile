@@ -48,7 +48,7 @@ bonus:${NAMEBONUS}
 ${NAMEBONUS}:${SRCBONUS}
 	make -C ft_printf
 	make -C gnl
-	${CC} ${CFLAGS} -o $@ $^ ${INCLUDEPRINT} ${INCLUDEGNL}
+	${CC} ${CFLAGS} -o pipex $^ ${INCLUDEPRINT} ${INCLUDEGNL}
 
 %.o:%.c
 	${CC} ${CFLAGS} -c $^
