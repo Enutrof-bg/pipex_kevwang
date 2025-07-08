@@ -57,20 +57,17 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc == 5)
 	{
-		if (pipe(fd) == -1)
-			exit(EXIT_FAILURE);
+		pipe(fd);
 		id1 = fork();
-		if (id1 < 0)
-			exit(EXIT_FAILURE);
 		if (id1 == 0)
+		{
 			cmd1(argv, env, fd);
-		// wait(NULL);
+		}
 		id2 = fork();
-		if (id2 < 0)
-			exit(EXIT_FAILURE);
 		if (id2 == 0)
+		{
 			cmd2(argv, env, fd);
-		// wait(NULL);
+		}
 		close(fd[0]);
 		close(fd[1]);
 		waitpid(id1, &status, 0);
