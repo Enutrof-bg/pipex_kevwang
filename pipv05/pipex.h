@@ -1,0 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kevwang <kevwang@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/27 11:56:39 by kevwang           #+#    #+#             */
+/*   Updated: 2025/06/27 11:56:39 by kevwang          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef PIPEX_H
+# define PIPEX_H
+
+# define EXIT 1
+# define NOEXIT 0
+
+# include <stdlib.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <sys/wait.h> //for wait()
+# include "ft_printf/ft_printf.h"
+
+char	*get_next_line(int fd);
+
+char	**ft_split(char const *s, char c);
+char	*ft_strjoin(char const *s1, char const *s2);
+size_t	ft_strlen(const char *str);
+int		ft_strncmp(char *s1, char *s2, unsigned int n);
+void	ft_print_tab(char **tab);
+int		exec(char *arg, char **env);
+void	ft_free_double_tab(char **tab);
+void	ft_close(int fd[2], int fd2, int status);
+void	ft_free(char **tab1, char **tab2, char *str);
+
+#endif
