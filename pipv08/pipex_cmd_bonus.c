@@ -31,6 +31,8 @@ int	ft_cmd_infd(t_pipex *pipex, char **argv, char **env)
 
 int	ft_cmd_mid(t_pipex *pipex, char **argv, char **env)
 {
+	(void)argv;
+	(void)env;
 	pipex->id1 = fork();
 	if (pipex->id1 == 0)
 	{
@@ -39,6 +41,11 @@ int	ft_cmd_mid(t_pipex *pipex, char **argv, char **env)
 		close(pipex->pipefd[pipex->pos].fd[0]);
 		exec(argv[pipex->pos + 2], env);
 		close(pipex->pipefd[pipex->pos].fd[1]);
+
+		// char buff[50000];
+		// int readfd = read(0, buff, 50000);
+		// buff[readfd] = 0;
+		// printf("'%s'", buff);
 	}
 	wait(NULL);
 	close(pipex->pipefd[pipex->pos].fd[1]);

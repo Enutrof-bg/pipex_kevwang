@@ -52,7 +52,7 @@ int	ft_here_doc(int argc, char **argv, char **env, t_pipex *pipex)
 	pipex->id1 = fork();
 	if (pipex->id1 == 0)
 	{
-		pipex->outfd = open(argv[argc -1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+		pipex->outfd = open(argv[argc -1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		dup2(pipex->outfd, 1);
 		exec(argv[3], env);
 		close(pipex->outfd);
@@ -88,7 +88,7 @@ int	main(int argc, char **argv, char **env)
 		if (!pipex->pipefd)
 			return (perror("pipefd malloc"), 1);
 		i = 0;
-		while (i < pipex->nbr_cmd)
+		while (i < pipex->nbr_pipe)
 		{
 			pipe(pipex->pipefd[i].fd);
 			i++;
