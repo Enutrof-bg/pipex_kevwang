@@ -27,36 +27,48 @@
 
 typedef struct s_pipe
 {
-	int fd[2];
+	int	fd[2];
 }t_pipe;
 
 typedef struct s_pipex
 {
-	char *str;
-	char **envpath;
-	char **tab;
-	char *path;
+	char	*str;
+	char	**envpath;
+	char	**tab;
+	char	*path;
 
-	int infd;
-	int outfd;
-	int id1;
-	int nbr_cmd;
-	int nbr_pipe;
-	t_pipe *pipefd;
-	int pos;
+	int		infd;
+	int		outfd;
+	int		id1;
+	int		nbr_cmd;
+	int		nbr_pipe;
+	t_pipe	*pipefd;
+	int		pos;
 
-	char *heredoc;
+	char	*heredoc;
 }t_pipex;
 
 char	**ft_split(char const *s, char c);
-// char	*ft_strjoin(char const *s1, char const *s2);
-// size_t	ft_strlen(const char *str);
+char	*ft_strjoin(char const *s1, char const *s2);
+size_t	ft_strlen(const char *str);
+
+//pipex_utlis
 int		ft_strncmp(char *s1, char *s2, unsigned int n);
 void	ft_print_tab(char **tab);
 
+//pipex_path
 char	*get_path(char **env);
 int		exec(char *arg, char **env);
+
+//pipex_free
 void	ft_free_double_tab(char **tab);
 void	ft_close(int fd[2], int fd2, int status);
 void	ft_free(char **tab1, char **tab2, char *str);
+
+//pipex_cmd_bonus
+int		ft_cmd_solo(t_pipex *pipex, char **argv, char **env);
+int		ft_cmd_outfd(t_pipex *pipex, char **argv, char **env);
+int		ft_cmd_mid(t_pipex *pipex, char **argv, char **env);
+int		ft_cmd_infd(t_pipex *pipex, char **argv, char **env);
+
 #endif
