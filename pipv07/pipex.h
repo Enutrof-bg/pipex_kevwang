@@ -13,6 +13,7 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
+# define EXITSUCCES 2
 # define EXIT 1
 # define NOEXIT 0
 

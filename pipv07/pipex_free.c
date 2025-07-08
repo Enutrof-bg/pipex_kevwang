@@ -45,4 +45,6 @@ void	ft_close(int fd[2], int fd2, int status)
 		close (fd2);
 	if (status == EXIT)
 		exit(EXIT_FAILURE);
+	if (status == EXITSUCCES)
+		exit(EXIT_SUCCESS);
 }

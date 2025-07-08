@@ -16,7 +16,7 @@ void	cmd1(char **argv, char **env, int fd[2])
 {
 	int	infd;
 
-	infd = open(argv[1], O_RDONLY, 0777);
+	infd = open(argv[1], O_RDONLY, 0644);
 	if (infd == -1)
 		ft_close(fd, -1, EXIT);
 	if (dup2(infd, 0) == -1)
@@ -34,7 +34,7 @@ void	cmd2(char **argv, char **env, int fd[2])
 {
 	int	outfd;
 
-	outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (outfd == -1)
 		ft_close(fd, -1, EXIT);
 	if (dup2(outfd, 1) == -1)
