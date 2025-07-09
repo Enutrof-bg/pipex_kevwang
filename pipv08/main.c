@@ -18,11 +18,21 @@ void	cmd1(char **argv, char **env, int fd[2])
 
 	infd = open(argv[1], O_RDONLY, 0777);
 	if (infd == -1)
-		ft_close(fd, -1, EXIT);
+	{
+		// perror("infd");
+		ft_close(fd, -1, NOEXIT);
+		// return ;
+	}
 	if (dup2(infd, 0) == -1)
+	{
+		perror("dup2:1");
 		ft_close(fd, infd, EXIT);
+	}
 	if (dup2(fd[1], 1) == -1)
+	{
+		perror("dup2:2");
 		ft_close(fd, infd, EXIT);
+	}
 	close(fd[0]);
 	if (exec(argv[2], env) == -1)
 		ft_close(fd, infd, EXIT);
@@ -63,6 +73,7 @@ int	main(int argc, char **argv, char **env)
 		{
 			cmd1(argv, env, fd);
 		}
+		wait(NULL);
 		id2 = fork();
 		if (id2 == 0)
 		{
@@ -70,7 +81,7 @@ int	main(int argc, char **argv, char **env)
 		}
 		close(fd[0]);
 		close(fd[1]);
-		waitpid(id1, &status, 0);
+		// waitpid(id1, &status, 0);
 		waitpid(id2, &status, 0);
 	}
 	return (0);

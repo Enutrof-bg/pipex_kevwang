@@ -78,6 +78,7 @@ int	ft_cmd_solo(t_pipex *pipex, char **argv, char **env)
 		close(pipex->pipefd[pipex->pos].fd[0]);
 		exec(argv[pipex->pos + 2], env);
 		close(pipex->pipefd[pipex->pos].fd[1]);
+		close(pipex->outfd);
 	}
 	wait(NULL);
 	close(pipex->pipefd[pipex->pos].fd[1]);

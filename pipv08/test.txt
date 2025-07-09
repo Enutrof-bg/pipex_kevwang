@@ -1,0 +1,25 @@
+./pipex infile "cat -e" "wc -l" outfile
+
+./pipex infile "grep Now" outfile
+
+./pipex infile "cat -e" outfile
+
+./pipex infile2 "cat -e" "ls" outfile
+
+./pipex infile2 "cat -e" "ls" outfile
+
+./pipex infile "cat" "head -5" outfile
+
+< infile grep Now | wc -w > outfile
+./pipex infile "grep Now" "wc -w" outfile
+
+< infile wc -w | cat > outfile
+./pipex infile "wc -w" "cat" oufile
+
+<infile wc -w | wc -m > outfile
+./pipex infile "wc -w" "wc -m" outfile
+
+./pipex infile "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" outfile
+
+./pipex infile "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" outfile
+
