@@ -23,3 +23,6 @@
 
 ./pipex infile "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" outfile
 
+< infile sleep 2 | sleep 3 | sleep 1 > outfile
+./pipex infile "sleep 2" "sleep 3" "sleep 1" outfile
+

@@ -144,7 +144,9 @@ int	main(int argc, char **argv, char **env)
 					ft_cmd_mid(pipex, argv, env);
 				}
 				pipex->pos++;
+				wait(NULL);
 			}
+			// wait(NULL);
 		}
 		ft_close_pipe(pipex);
 		free(pipex->pipefd);
