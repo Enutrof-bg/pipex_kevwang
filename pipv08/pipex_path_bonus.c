@@ -71,7 +71,9 @@ int	exec(char *arg, char **env)
 		return (ft_free(envpath, NULL, NULL), -1);
 	path = check_path(envpath, tab);
 	if (!path)
+	{
 		return (ft_free(envpath, tab, NULL), -1);
+	}
 	if (execve(path, tab, env) == -1)
 		return (ft_free(envpath, tab, path), -1);
 	ft_free(envpath, tab, path);

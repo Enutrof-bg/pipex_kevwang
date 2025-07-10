@@ -73,6 +73,7 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc == 5)
 	{
+		
 		pipe(fd);
 		id1 = fork();
 		if (id1 == 0)
@@ -89,6 +90,27 @@ int	main(int argc, char **argv, char **env)
 		close(fd[1]);
 		// waitpid(id1, &status, 0);
 		waitpid(id2, &status, 0);
+		
+		/*
+		id1 = fork();
+		if (id1 == 0)
+		{
+			pipe(fd);
+			id2 = fork();
+			if (id2 == 0)
+			{
+				cmd1(argv, env, fd);
+			}
+			else
+			{
+				cmd2(argv, env, fd);
+			}
+		}
+		else
+		{
+			wait(NULL);
+		}
+		*/
 	}
 	return (0);
 }
