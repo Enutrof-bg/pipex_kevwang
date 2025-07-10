@@ -35,7 +35,10 @@ void	cmd1(char **argv, char **env, int fd[2])
 	}
 	close(fd[0]);
 	if (exec(argv[2], env) == -1)
+	{
+		perror("command not found");
 		ft_close(fd, infd, EXIT);
+	}
 	close(fd[1]);
 	close(infd);
 }
@@ -53,7 +56,10 @@ void	cmd2(char **argv, char **env, int fd[2])
 		ft_close(fd, outfd, EXIT);
 	close(fd[1]);
 	if (exec(argv[3], env) == -1)
+	{
+		perror("command not found");
 		ft_close(fd, outfd, EXIT);
+	}
 	close(outfd);
 	close(fd[0]);
 }
