@@ -12,6 +12,18 @@
 
 #include "pipex_bonus.h"
 
+void	ft_open_pipe(t_pipex *pipex)
+{
+	int	i;
+
+	i = 0;
+	while (i < pipex->nbr_cmd)
+	{
+		pipe(pipex->pipefd[i].fd);
+		i++;
+	}
+}
+
 void	ft_close_pipe(t_pipex *pipex)
 {
 	int	i;
@@ -25,6 +37,7 @@ void	ft_close_pipe(t_pipex *pipex)
 	}
 }
 
+/*
 int	ft_here_doc(int argc, char **argv, char **env, t_pipex *pipex)
 {
 	char	*test;
@@ -89,70 +102,68 @@ int	ft_here_doc(int argc, char **argv, char **env, t_pipex *pipex)
 	unlink("temp");
 	return (0);
 }
+*/
+
+void	ft_free_pipex(t_pipex *pipex)
+{
+	if (pipex->pipefd)
+		free(pipex->pipefd);
+	free(pipex);
+}
+
+int	pipex_init(t_pipex *pipex, int argc, char **argv, char **env)
+{
+	pipex->str = get_path(env);
+	pipex->infd = open(argv[1], O_RDONLY, 0777);
+	if (pipex->infd == -1)
+		return (perror("infd:"), 1);
+	pipex->outfd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (pipex->outfd == -1)
+		return (perror("outfd:"), 1);
+	pipex->nbr_cmd = argc - 3;
+	pipex->nbr_pipe = pipex->nbr_cmd - 1;
+	pipex->pos = 0;
+	pipex->pipefd = malloc(sizeof(t_pipe) * (pipex->nbr_pipe + 1));
+	if (!pipex->pipefd)
+		return (perror("pipefd malloc"), 1);
+	return (0);
+}
 
 int	main(int argc, char **argv, char **env)
 {
 	t_pipex	*pipex;
-	int		i;
 
 	if (argc >= 4)
 	{
 		pipex = malloc(sizeof(t_pipex));
-		if (ft_strncmp(argv[1], "here_doc", 8) == 0)
-		{
-			if (ft_here_doc(argc, argv, env, pipex) == -1)
-				return (free(pipex), 1);
-			return (0);
-		}
-		pipex->str = get_path(env);
-		pipex->infd = open(argv[1], O_RDONLY, 0777);
-		if (pipex->infd == -1)
-			return (perror("infd:"), 1);
-		pipex->outfd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-		if (pipex->outfd == -1)
-			return (perror("outfd:"), 1);
-		pipex->nbr_cmd = argc - 3;
-		pipex->nbr_pipe = pipex->nbr_cmd - 1;
-		pipex->pos = 0;
-		pipex->pipefd = malloc(sizeof(t_pipe) * (pipex->nbr_pipe + 1));
-		if (!pipex->pipefd)
-			return (perror("pipefd malloc"), 1);
-		i = 0;
-		while (i < pipex->nbr_cmd)
-		{
-			pipe(pipex->pipefd[i].fd);
-			i++;
-		}
+		if (pipex_init(pipex, argc, argv, env) == 1)
+			return (1);
+		ft_open_pipe(pipex);
 		if (argc == 4)
-		{
 			ft_cmd_solo(pipex, argv, env);
-		}
 		if (argc > 4)
 		{
 			while (pipex->pos < pipex->nbr_cmd)
 			{
-				if (pipex->pos == 0)
-				{
+				if (pipex->pos++ == 0)
 					ft_cmd_infd(pipex, argv, env);
-				}
 				else if (pipex->pos == pipex->nbr_pipe)
-				{
 					ft_cmd_outfd(pipex, argv, env);
-				}
 				else
-				{
 					ft_cmd_mid(pipex, argv, env);
-				}
-				pipex->pos++;
-				wait(NULL);
 			}
-			// wait(NULL);
 		}
 		ft_close_pipe(pipex);
-		free(pipex->pipefd);
-		free(pipex);
+		ft_free_pipex(pipex);
 	}
 }
+
+		// if (ft_strncmp(argv[1], "here_doc", 8) == 0)
+		// {
+		// 	if (ft_here_doc(argc, argv, env, pipex) == -1)
+		// 		return (free(pipex), 1);
+		// 	return (0);
+		// }
 
 // 	if (argc >= 6)
 // 	{

@@ -24,7 +24,7 @@ int	ft_cmd_infd(t_pipex *pipex, char **argv, char **env)
 		close(pipex->pipefd[pipex->pos].fd[1]);
 		close(pipex->infd);
 	}
-	// wait(NULL);
+	wait(NULL);
 	close(pipex->pipefd[pipex->pos].fd[1]);
 	return (0);
 }
@@ -41,13 +41,8 @@ int	ft_cmd_mid(t_pipex *pipex, char **argv, char **env)
 		close(pipex->pipefd[pipex->pos].fd[0]);
 		exec(argv[pipex->pos + 2], env);
 		close(pipex->pipefd[pipex->pos].fd[1]);
-
-		// char buff[50000];
-		// int readfd = read(0, buff, 50000);
-		// buff[readfd] = 0;
-		// printf("'%s'", buff);
 	}
-	// wait(NULL);
+	wait(NULL);
 	close(pipex->pipefd[pipex->pos].fd[1]);
 	return (0);
 }
@@ -63,7 +58,7 @@ int	ft_cmd_outfd(t_pipex *pipex, char **argv, char **env)
 		exec(argv[pipex->pos + 2], env);
 		close(pipex->pipefd[pipex->pos].fd[1]);
 	}
-	// wait(NULL);
+	wait(NULL);
 	close(pipex->pipefd[pipex->pos].fd[1]);
 	return (0);
 }
@@ -80,7 +75,7 @@ int	ft_cmd_solo(t_pipex *pipex, char **argv, char **env)
 		close(pipex->pipefd[pipex->pos].fd[1]);
 		close(pipex->outfd);
 	}
-	// wait(NULL);
+	wait(NULL);
 	close(pipex->pipefd[pipex->pos].fd[1]);
 	return (0);
 }
