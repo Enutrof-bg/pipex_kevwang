@@ -24,6 +24,20 @@
 # include <sys/wait.h> //for wait()
 # include "ft_printf/ft_printf.h"
 
+typedef struct s_pipex
+{
+	char	*str;
+	char	**envpath;
+	char	**tab;
+	char	*path;
+
+	int		infd;
+	int		outfd;
+	int		id1;
+	int		id2;
+	int		fd[2];
+}t_pipex;
+
 char	*get_next_line(int fd);
 
 char	**ft_split(char const *s, char c);

@@ -26,3 +26,44 @@
 < infile sleep 2 | sleep 3 | sleep 1 > outfile
 ./pipex infile "sleep 2" "sleep 3" "sleep 1" outfile
 
+< infile zzz | ls -l > outfile
+zsh: command not found: zzz
+//mais outfile contien ls -l
+./pipex infile "asdasd" "ls -l" outfile
+//outfile contient ls -l
+ok
+
+< infile zzz | dsf > outfile
+zsh: command not found: zzz
+zsh: command not found: dsf
+//outfile est crer mais vide
+./pipex infile "asdasd" "lsasdasd -l" outfile
+//outfile est vide 
+ok
+
+< infile casda | grep Now > outfile
+zsh: command not found: casda
+//outfile vide
+./pipex infile "asdasd" "grep Now" outfile
+//outfile vide
+ok
+
+< infile cat | grasdasd > outfile
+zsh: command not found: grasdasd
+//outfile vide
+./pipex infile "cat" "asdasd" outfile
+//outfile vide 
+ok
+
+chmod 000 infile
+< infile cat | grep Now > outfile
+zsh: permission denied: infile
+//outfile vide
+
+chmod 000 infile
+< infile cat | ls -l > outfile
+zsh: permission denied: infile
+//outfile contient ls -l
+./pipex infile "cat" "ls -l" outfile
+//outfile contien ls -l
+ok

@@ -12,91 +12,92 @@
 
 #include "pipex.h"
 
-void	cmd1(char **argv, char **env, int fd[2])
+void	cmd1(char **argv, char **env, t_pipex *pipex)
 {
-	int	infd;
+	// int	infd;
 
-	infd = open(argv[1], O_RDONLY, 0777);
-	if (infd == -1)
-		ft_close(fd, -1, EXIT);
-	if (dup2(infd, 0) == -1)
-		ft_close(fd, infd, EXIT);
-	if (dup2(fd[1], 1) == -1)
-		ft_close(fd, infd, EXIT);
-	close(fd[0]);
+	pipex->infd = open(argv[1], O_RDONLY, 0777);
+	if (pipex->infd == -1)
+		ft_close(pipex->fd, -1, EXIT);
+	if (dup2(pipex->infd, 0) == -1)
+		ft_close(pipex->fd, pipex->infd, EXIT);
+	if (dup2(pipex->fd[1], 1) == -1)
+		ft_close(pipex->fd, pipex->infd, EXIT);
+	close(pipex->fd[0]);
 	if (exec(argv[2], env) == -1)
-		ft_close(fd, infd, EXIT);
-	close(fd[1]);
-	close(infd);
+		ft_close(pipex->fd, pipex->infd, EXIT);
+	close(pipex->fd[1]);
+	close(pipex->infd);
 }
 
-void	cmd2(char **argv, char **env, int fd[2])
+void	cmd2(char **argv, char **env, t_pipex *pipex)
 {
-	int	outfd;
+	// int	outfd;
 
-	outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	if (outfd == -1)
-		ft_close(fd, -1, EXIT);
-	if (dup2(outfd, 1) == -1)
-		ft_close(fd, outfd, EXIT);
-	if (dup2(fd[0], 0) == -1)
-		ft_close(fd, outfd, EXIT);
-	close(fd[1]);
+	pipex->outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	if (pipex->outfd == -1)
+		ft_close(pipex->fd, -1, EXIT);
+	if (dup2(pipex->outfd, 1) == -1)
+		ft_close(pipex->fd, pipex->outfd, EXIT);
+	if (dup2(pipex->fd[0], 0) == -1)
+		ft_close(pipex->fd, pipex->outfd, EXIT);
+	close(pipex->fd[1]);
 	if (exec(argv[3], env) == -1)
-		ft_close(fd, outfd, EXIT);
-	close(outfd);
-	close(fd[0]);
+		ft_close(pipex->fd, pipex->outfd, EXIT);
+	close(pipex->outfd);
+	close(pipex->fd[0]);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	int	fd[2];
-	int	id1;
-	int	id2;
-	int	status;
+	// int	fd[2];
+	// int	id1;
+	// int	id2;
+	// int	status;
+	t_pipex *pipex;
+	if (argc != 5)
+		return (1);
+	/*
+	pipex = malloc(sizeof(t_pipex));
+	if (pipe(pipex->fd) == -1)
+		exit(EXIT_FAILURE);
+	pipex->id1 = fork();
+	if (pipex->id1 < 0)
+		exit(EXIT_FAILURE);
+	if (pipex->id1 == 0)
+		cmd1(argv, env, pipex->fd);
+	pipex->id2 = fork();
+	if (id2 < 0)
+		exit(EXIT_FAILURE);
+	if (id2 == 0)
+		cmd2(argv, env, fd);
+	close(fd[0]);
+	close(fd[1]);
+	waitpid(id1, &status, 0);
+	waitpid(id2, &status, 0);
+	return (0);*/
 
-	if (argc == 5)
+	pipex = malloc(sizeof(t_pipex));
+	pipex->id1 = fork();
+	if (pipex->id1 == 0)
 	{
-		if (pipe(fd) == -1)
-			exit(EXIT_FAILURE);
-		id1 = fork();
-		if (id1 < 0)
-			exit(EXIT_FAILURE);
-		if (id1 == 0)
-			cmd1(argv, env, fd);
-		id2 = fork();
-		if (id2 < 0)
-			exit(EXIT_FAILURE);
-		if (id2 == 0)
-			cmd2(argv, env, fd);
-		close(fd[0]);
-		close(fd[1]);
-		waitpid(id1, &status, 0);
-		waitpid(id2, &status, 0);
-	}
-	return (0);
-}
-
-/*	
-		id1 = fork();
-		if (id1 == 0)
+		pipe(pipex->fd);
+		pipex->id2 = fork();
+		if (pipex->id2 == 0)
 		{
-			pipe(fd);
-			id2 = fork();
-			if (id2 == 0)
-			{
-				cmd1(argv, env, fd);
-			}
-			else
-			{
-				cmd2(argv, env, fd);
-			}
+			cmd1(argv, env, pipex);
 		}
 		else
 		{
-			wait(NULL);
+			cmd2(argv, env, pipex);
 		}
-		*/
+	}
+	else
+	{
+		wait(NULL);
+	}
+	return (0);
+}
 
 	/*
 		if (pipe(fd) == -1)
