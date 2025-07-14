@@ -67,3 +67,7 @@ zsh: permission denied: infile
 ./pipex infile "cat" "ls -l" outfile
 //outfile contien ls -l
 ok
+
+
+./pipex infile cat "hostname" outfile
+<infile cat | hostname > outfile

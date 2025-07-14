@@ -34,6 +34,7 @@ pipex_cmd_bonus.c
 
 INCLUDEPRINT = -Lft_printf -lftprintf
 INCLUDEGNL = -Lgnl -lgnl
+
 SRC = ${FILE:.c=.o}
 SRCBONUS = ${FILEBONUS:.c=.o}
 
@@ -41,7 +42,7 @@ all: ${NAME}
 
 ${NAME}:${SRC}
 	make -C ft_printf
-	${CC} ${CFLAGS} -o $@ $^ ${INCLUDEPRINT}
+	${CC} ${CFLAGS} -o pipex $^ ${INCLUDEPRINT}
 
 bonus:${NAMEBONUS}
 
