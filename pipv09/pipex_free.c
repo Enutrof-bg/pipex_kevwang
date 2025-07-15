@@ -46,3 +46,15 @@ void	ft_close(int fd[2], int fd2, int exit_val)
 	if (exit_val >= 0)
 		exit(exit_val);
 }
+
+void	ft_close_all(t_pipex *pipex)
+{
+    if (pipex->fd[0] != -1)
+        close(pipex->fd[0]);
+    if (pipex->fd[1] != -1)
+        close(pipex->fd[1]);
+    if (pipex->infd != -1)
+        close(pipex->infd);
+    if (pipex->outfd != -1)
+        close(pipex->outfd);
+}

@@ -14,8 +14,8 @@
 
 void	cmd1(char **argv, char **env, t_pipex *pipex)
 {
-	int testfd = open("test.txt", O_RDONLY);
-	(void)testfd;
+	// int testfd = open("test.txt", O_RDONLY);
+	// (void)testfd;
 	// close(testfd);
 	pipex->infd = open(argv[1], O_RDONLY, 0777);
 	if (pipex->infd == -1)
@@ -55,13 +55,49 @@ void	cmd2(char **argv, char **env, t_pipex *pipex)
 
 int	main(int argc, char **argv, char **env)
 {
-	// int	fd[2];
-	// int	id1;
-	// int	id2;
-	int	 exit_status = 0;
-	t_pipex *pipex;
+	t_pipex	*pipex;
+	int		exit_status;
+
 	if (argc != 5)
 		return (1);
+	pipex = malloc(sizeof(t_pipex));
+	if (!pipex)
+		return (1);
+	exit_status = 0;
+	if (pipe(pipex->fd) == -1)
+		return (free(pipex), 1);
+	pipex->id1 = fork();
+	if (pipex->id1 < 0)
+	{
+		close(pipex->fd[0]);
+		close(pipex->fd[1]);
+		return (free(pipex), 1);
+	}
+	if (pipex->id1 == 0)
+	{
+		pipex->id2 = fork();
+		if (pipex->id2 < 0)
+		{
+			close(pipex->fd[0]);
+			close(pipex->fd[1]);
+			return (free(pipex) ,1);
+		}
+		if (pipex->id2 == 0)
+			cmd1(argv, env, pipex);
+		else
+			cmd2(argv, env, pipex);
+	}
+	else
+	{
+		close(pipex->fd[1]);
+		close(pipex->fd[0]);
+		waitpid(pipex->id1, &pipex->status, 0);
+		if (WIFEXITED(pipex->status))
+			exit_status = WEXITSTATUS(pipex->status);
+	}
+	return (free(pipex), exit_status);
+}
+
 	/*
 	pipex = malloc(sizeof(t_pipex));
 	if (pipe(pipex->fd) == -1)
@@ -81,35 +117,6 @@ int	main(int argc, char **argv, char **env)
 	waitpid(id1, &status, 0);
 	waitpid(id2, &status, 0);
 	return (0);*/
-
-	pipex = malloc(sizeof(t_pipex));
-	pipex->id1 = fork();
-	if (pipex->id1 == 0)
-	{
-		pipe(pipex->fd);
-		pipex->id2 = fork();
-		if (pipex->id2 == 0)
-		{
-			cmd1(argv, env, pipex);
-		}
-		else
-		{
-			cmd2(argv, env, pipex);
-		}
-	}
-	else
-	{
-		waitpid(pipex->id1, &pipex->status, 0);
-		if (WIFEXITED(pipex->status))
-		{
-		exit_status = WEXITSTATUS(pipex->status);
-		// printf("exit_status:%d\n", pipex->exit_status);
-		// return (pipex->exit_status);
-		}
-	}
-	free(pipex);
-	return (exit_status);
-}
 
 	/*
 		if (pipe(fd) == -1)
