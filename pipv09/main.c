@@ -14,8 +14,9 @@
 
 void	cmd1(char **argv, char **env, t_pipex *pipex)
 {
-	// int	infd;
-
+	int testfd = open("test.txt", O_RDONLY);
+	(void)testfd;
+	// close(testfd);
 	pipex->infd = open(argv[1], O_RDONLY, 0777);
 	if (pipex->infd == -1)
 		ft_close(pipex->fd, -1, EXIT);
@@ -25,15 +26,16 @@ void	cmd1(char **argv, char **env, t_pipex *pipex)
 		ft_close(pipex->fd, pipex->infd, EXIT);
 	close(pipex->fd[0]);
 	if (exec(argv[2], env) == -1)
+	{
+		perror("command not found");
 		ft_close(pipex->fd, pipex->infd, EXIT);
+	}
 	close(pipex->fd[1]);
 	close(pipex->infd);
 }
 
 void	cmd2(char **argv, char **env, t_pipex *pipex)
 {
-	// int	outfd;
-
 	pipex->outfd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777);
 	if (pipex->outfd == -1)
 		ft_close(pipex->fd, -1, EXIT);
@@ -43,7 +45,10 @@ void	cmd2(char **argv, char **env, t_pipex *pipex)
 		ft_close(pipex->fd, pipex->outfd, EXIT);
 	close(pipex->fd[1]);
 	if (exec(argv[3], env) == -1)
-		ft_close(pipex->fd, pipex->outfd, EXIT);
+	{
+		perror("command not found");
+		ft_close(pipex->fd, pipex->outfd, 127);
+	}
 	close(pipex->outfd);
 	close(pipex->fd[0]);
 }
@@ -53,7 +58,7 @@ int	main(int argc, char **argv, char **env)
 	// int	fd[2];
 	// int	id1;
 	// int	id2;
-	// int	status;
+	int	 exit_status = 0;
 	t_pipex *pipex;
 	if (argc != 5)
 		return (1);
@@ -94,9 +99,16 @@ int	main(int argc, char **argv, char **env)
 	}
 	else
 	{
-		wait(NULL);
+		waitpid(pipex->id1, &pipex->status, 0);
+		if (WIFEXITED(pipex->status))
+		{
+		exit_status = WEXITSTATUS(pipex->status);
+		// printf("exit_status:%d\n", pipex->exit_status);
+		// return (pipex->exit_status);
+		}
 	}
-	return (0);
+	free(pipex);
+	return (exit_status);
 }
 
 	/*

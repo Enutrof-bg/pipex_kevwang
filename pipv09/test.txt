@@ -28,46 +28,50 @@
 
 < infile zzz | ls -l > outfile
 zsh: command not found: zzz
-//mais outfile contien ls -l
+//mais outfile contien ls -l //echo $? = 0
 ./pipex infile "asdasd" "ls -l" outfile
-//outfile contient ls -l
+//outfile contient ls -l //echo $? = 0
 ok
 
 < infile zzz | dsf > outfile
 zsh: command not found: zzz
 zsh: command not found: dsf
-//outfile est crer mais vide
+//outfile est crer mais vide //echo $? = 127
 ./pipex infile "asdasd" "lsasdasd -l" outfile
-//outfile est vide 
+//outfile est vide // echo $? = 127
 ok
 
 < infile casda | grep Now > outfile
 zsh: command not found: casda
-//outfile vide
+//outfile vide // echo $? = 1
 ./pipex infile "asdasd" "grep Now" outfile
-//outfile vide
+//outfile vide //echo $? = 1
 ok
 
 < infile cat | grasdasd > outfile
 zsh: command not found: grasdasd
-//outfile vide
+//outfile vide //echo $? = 127
 ./pipex infile "cat" "asdasd" outfile
-//outfile vide 
+//outfile vide  //echo $? = 127
 ok
 
 chmod 000 infile
 < infile cat | grep Now > outfile
 zsh: permission denied: infile
-//outfile vide
+//outfile vide // echo $? = 1
+./pipex infile "cat" "grep Now" outfile
+//outfile vide echo $? = 1
+ok
 
 chmod 000 infile
 < infile cat | ls -l > outfile
 zsh: permission denied: infile
-//outfile contient ls -l
+//outfile contient ls -l //echo $? = 0
 ./pipex infile "cat" "ls -l" outfile
-//outfile contien ls -l
+//outfile contien ls -l //echo $? = 0
 ok
 
 
 ./pipex infile cat "hostname" outfile
 <infile cat | hostname > outfile
+//outfile vaut hostname //echo $? = 0

@@ -55,6 +55,22 @@ char	*check_path(char **tab, char **cmd)
 	return (NULL);
 }
 
+char *ft_str_last(char *str)
+{
+	int i;
+	int j;
+
+	j = 0;
+	i = 0;
+	while (str[i])
+		i++;
+	while (str[i-j] != '/' && j < i)
+		j++;
+	if (str[i-j] == '/')
+		j--;
+	return (&str[i-j]);
+}
+
 int	exec(char *arg, char **env)
 {
 	char	*str;
@@ -66,6 +82,7 @@ int	exec(char *arg, char **env)
 	envpath = ft_split(str, ':');
 	if (!envpath)
 		return (-1);
+	arg = ft_str_last(arg);
 	tab = ft_split(arg, ' ');
 	if (!tab)
 		return (ft_free(envpath, NULL, NULL), -1);

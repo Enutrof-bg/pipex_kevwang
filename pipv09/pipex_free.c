@@ -35,7 +35,7 @@ void	ft_free(char **tab1, char **tab2, char *str)
 		free(str);
 }
 
-void	ft_close(int fd[2], int fd2, int status)
+void	ft_close(int fd[2], int fd2, int exit_val)
 {
 	if (fd[0])
 		close(fd[0]);
@@ -43,6 +43,6 @@ void	ft_close(int fd[2], int fd2, int status)
 		close(fd[1]);
 	if (fd2 != -1)
 		close (fd2);
-	if (status == EXIT)
-		exit(EXIT_FAILURE);
+	if (exit_val >= 0)
+		exit(exit_val);
 }

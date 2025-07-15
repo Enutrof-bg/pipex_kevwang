@@ -2,17 +2,17 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror
 
-# FILE = get_next_line.c get_next_line_utils.c
-# SRC = ${FILE:.c=.o}
+FILE = get_next_line.c get_next_line_utils.c
+SRC = ${FILE:.c=.o}
 
-# %.o:%.c
-# 	${CC} ${CFLAGS} -c $^
+%.o:%.c
+	${CC} ${CFLAGS} -c $^
 
 NAME = get_next_line
 
 all: ${NAME}
 
-${NAME}:get_next_line.o get_next_line_utils.o
+${NAME}:${SRC}
 	ar -rcs -o libgnl.a $^
 
 get_next_line.o :
