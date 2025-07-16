@@ -42,14 +42,14 @@ all: ${NAME}
 
 ${NAME}:${SRC}
 	make -C ft_printf
-	${CC} ${CFLAGS} -o pipex $^ ${INCLUDEPRINT}
+	${CC} ${CFLAGS} -o ${NAME} $^ ${INCLUDEPRINT}
 
 bonus:${NAMEBONUS}
 
 ${NAMEBONUS}:${SRCBONUS}
 	make -C ft_printf
 	make -C gnl
-	${CC} ${CFLAGS} -o pipex $^ ${INCLUDEPRINT} ${INCLUDEGNL}
+	${CC} ${CFLAGS} -o ${NAME} $^ ${INCLUDEPRINT} ${INCLUDEGNL}
 
 %.o:%.c
 	${CC} ${CFLAGS} -c $^
@@ -72,7 +72,6 @@ fclean:clean
 	rm -f ft_printf/libftprintf.a
 	rm -f gnl/libgnl.a
 	rm -f pipex
-	rm -f pipex_bonus
 
 re:fclean
 	make

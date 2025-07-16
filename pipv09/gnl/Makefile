@@ -8,18 +8,18 @@ SRC = ${FILE:.c=.o}
 %.o:%.c
 	${CC} ${CFLAGS} -c $^
 
-NAME = get_next_line
+NAME = libgnl.a
 
 all: ${NAME}
 
 ${NAME}:${SRC}
-	ar -rcs -o libgnl.a $^
+	ar -rcs -o $@ $^
 
-get_next_line.o :
-	${CC} ${CFLAGS} -c get_next_line.c
+# get_next_line.o :
+# 	${CC} ${CFLAGS} -c get_next_line.c
 
-get_next_line_utils.o:
-	${CC} ${CFLAGS} -c get_next_line_utils.c
+# get_next_line_utils.o:
+# 	${CC} ${CFLAGS} -c get_next_line_utils.c
 
 clean :
 	rm -f get_next_line.o \

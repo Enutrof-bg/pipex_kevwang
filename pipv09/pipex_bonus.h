@@ -42,6 +42,7 @@ typedef struct s_pipex
 	int		id1;
 	int		nbr_cmd;
 	int		nbr_pipe;
+	int		fd[2];
 	t_pipe	*pipefd;
 	int		pos;
 

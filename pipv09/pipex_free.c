@@ -47,7 +47,7 @@ void	ft_close(int fd[2], int fd2, int exit_val)
 		exit(exit_val);
 }
 
-void	ft_close_all(t_pipex *pipex)
+void	ft_close_all(t_pipex *pipex, int exit_val)
 {
     if (pipex->fd[0] != -1)
         close(pipex->fd[0]);
@@ -57,4 +57,6 @@ void	ft_close_all(t_pipex *pipex)
         close(pipex->infd);
     if (pipex->outfd != -1)
         close(pipex->outfd);
+    if (exit_val >= 0)
+		exit(exit_val);
 }

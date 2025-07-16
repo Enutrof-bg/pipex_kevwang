@@ -75,3 +75,7 @@ ok
 ./pipex infile cat "hostname" outfile
 <infile cat | hostname > outfile
 //outfile vaut hostname //echo $? = 0
+
+
+./pipex infile "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" outfile
+< infile cat -e |cat -e |cat -e |cat -e |cat -e >outfile

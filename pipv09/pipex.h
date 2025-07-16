@@ -58,6 +58,6 @@ int		exec(char *arg, char **env);
 void	ft_free_double_tab(char **tab);
 void	ft_close(int fd[2], int fd2, int status);
 void	ft_free(char **tab1, char **tab2, char *str);
-void	ft_close_all(t_pipex *pipex);
+void	ft_close_all(t_pipex *pipex, int exit_val);
 
 #endif
