@@ -57,6 +57,7 @@ void	ft_close_all(t_pipex *pipex, int exit_val)
         close(pipex->infd);
     if (pipex->outfd != -1)
         close(pipex->outfd);
+    free(pipex);
     if (exit_val >= 0)
 		exit(exit_val);
 }

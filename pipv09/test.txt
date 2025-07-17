@@ -79,3 +79,9 @@ ok
 
 ./pipex infile "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" outfile
 < infile cat -e |cat -e |cat -e |cat -e |cat -e >outfile
+
+
+./pipex big "sleep 3" "ls" outfile
+
+
+./pipex big "cat -e" "head -2" outfile

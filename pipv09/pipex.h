@@ -14,7 +14,7 @@
 # define PIPEX_H
 
 # define EXIT 1
-# define NOEXIT 0
+# define NOEXIT -1
 
 # include <stdlib.h>
 # include <stdio.h>
