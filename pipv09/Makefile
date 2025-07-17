@@ -24,7 +24,7 @@ pipex_utlis.c \
 pipex_path.c \
 pipex_free.c
 
-FILEBONUS = main.c \
+FILEBONUS = main_test.c \
 ft_split.c \
 ft_strjoin.c \
 pipex_utlis.c \

@@ -47,6 +47,9 @@ typedef struct s_pipex
 	int		pos;
 
 	char	*heredoc;
+
+	int 	status;
+	int		exit_status;
 }t_pipex;
 
 char	**ft_split(char const *s, char c);
