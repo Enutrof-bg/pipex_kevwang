@@ -40,6 +40,7 @@ typedef struct s_pipex
 	int		infd;
 	int		outfd;
 	int		id1;
+	int 	id2;
 	int		nbr_cmd;
 	int		nbr_pipe;
 	int		fd[2];
@@ -74,5 +75,7 @@ int		ft_cmd_solo(t_pipex *pipex, char **argv, char **env);
 int		ft_cmd_outfd(t_pipex *pipex, char **argv, char **env);
 int		ft_cmd_mid(t_pipex *pipex, char **argv, char **env);
 int		ft_cmd_infd(t_pipex *pipex, char **argv, char **env);
+
+void	ft_close_all(t_pipex *pipex, int exit_val);
 
 #endif
