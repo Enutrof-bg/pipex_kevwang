@@ -59,6 +59,7 @@ clean:
 	make clean -C gnl
 	rm -f main.o \
 	main_bonus.o \
+	main_test2.o \
 	ft_split.o \
 	ft_strjoin.o \
 	pipex_utlis.o \
