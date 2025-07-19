@@ -77,5 +77,5 @@ int		ft_cmd_mid(t_pipex *pipex, char **argv, char **env);
 int		ft_cmd_infd(t_pipex *pipex, char **argv, char **env);
 
 void	ft_close_all(t_pipex *pipex, int exit_val);
-
+void	ft_close_pipe(t_pipex *pipex);
 #endif

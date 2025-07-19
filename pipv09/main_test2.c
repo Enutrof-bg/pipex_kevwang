@@ -94,7 +94,7 @@ int	main(int argc, char **argv, char **env)
 
 	exit_status = 0;
 	(void)exit_status;
-	if (argc <= 5)
+	if (argc < 4)
 		return (1);
 	pipex = malloc(sizeof(t_pipex));
 	if (!pipex)
@@ -111,38 +111,52 @@ int	main(int argc, char **argv, char **env)
 
 	ft_open_pipe(pipex);
 
-	pipex->infd = open(argv[1], O_RDONLY, 0777);
-	if (pipex->infd < 0)
-	{
-		return (perror("infile"), 1);
-		// ft_close_all(pipex,	EXIT);
-	}
-	pipex->outfd = open(argv[argc-1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
-	if (pipex->outfd < 0)
-	{
-		// ft_close_all(pipex, EXIT);
-		return (perror("outfile"), 1);
-	}
+	// pipex->infd = open(argv[1], O_RDONLY, 0777);
+	// if (pipex->infd < 0)
+	// {
+	// 	// return (perror("infile"), 1);
+	// 	// ft_close_all(pipex,	EXIT);
+	// }
+	// pipex->outfd = open(argv[argc-1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+	// if (pipex->outfd < 0)
+	// {
+	// 	// ft_close_all(pipex, EXIT);
+	// 	// return (perror("outfile"), 1);
+	// }
 
 	while (pipex->pos < pipex->nbr_cmd)
 	{
-		// if (pipe(pipex->fd) == -1)
-		// 	return (free(pipex), 1);
 		pipex->id1 = fork();
 		if (pipex->id1 < 0)
 			return (close(pipex->fd[0]), close(pipex->fd[1]), free(pipex), 1);
 		if (pipex->id1 == 0)
 		{
-			if (pipex->pos == 0)
+			if (pipex->nbr_cmd == 1)
 			{
+				dup2(pipex->infd, 0);
+				dup2(pipex->outfd, 1);
+			}
+			else if (pipex->pos == 0)
+			{
+				pipex->infd = open(argv[1], O_RDONLY, 0777);
+				if (pipex->infd < 0)
+				{
+					// return (perror("infile"), 1);
+					ft_close_all(pipex,	EXIT);
+				}
 				dup2(pipex->infd, 0);
 				dup2(pipex->pipefd[pipex->pos].fd[1], 1);
 			}
-			}
-			else if (pipex->pos == nbr_cmd -1)
+			else if (pipex->pos == pipex->nbr_cmd -1)
 			{
+				pipex->outfd = open(argv[argc -1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
+				if (pipex->outfd < 0)
+				{
+					ft_close_all(pipex, EXIT);
+					// return (perror("outfile"), 1);
+				}
 				dup2(pipex->pipefd[pipex->pos-1].fd[0], 0);
-				dup(pipex->outfd, 1);
+				dup2(pipex->outfd, 1);
 			}
 			else
 			{
@@ -150,37 +164,37 @@ int	main(int argc, char **argv, char **env)
 				dup2(pipex->pipefd[pipex->pos].fd[1], 1);
 			}
 			ft_close_pipe(pipex);
-			close(pipex->infd);
-			close(pipex->outfd);
-
-			exec(argc[pipex->pos +2], env);
+			if (pipex->infd != -1)
+				close(pipex->infd);
+			if (pipex->outfd != -1)
+				close(pipex->outfd);
+			if (exec(argv[pipex->pos +2], env) == -1)
+			{
+				perror("command not found");
+				ft_close_all(pipex, 127);
+			}
+			free(pipex->pipefd);
+			free(pipex);
 		}
 		pipex->pos++;
-		// close(pipex->fd[1]);
-		// close(pipex->fd[0]);
-		// // close(pipex->outfd);
-		// // wait(NULL);
-		// pipex->pos++;
+		// wait(NULL);
 	}
-
-		// pipex->id2 = fork();
-		// if (pipex->id2 < 0)
-		// 	return (close(pipex->fd[0]), close(pipex->fd[1]), free(pipex), 1);
-		// if (pipex->id2 == 0)
-		// 	cmd2(argv, env, pipex);
-		// close(pipex->fd[0]);
-		// close(pipex->fd[1]);
-		// waitpid(pipex->id1, &pipex->status, 0);
-		// waitpid(pipex->id2, &pipex->status, 0);
-	// }
-	// pipex->id2 = fork();
-	// if (pipex->id2 < 0)
-	// 	return (close(pipex->fd[0]), close(pipex->fd[1]), free(pipex), 1);
-	// if (pipex->id2 == 0)
-	// 	cmd2(argv, env, pipex);
-
+	ft_close_pipe(pipex);
+	if (pipex->infd != -1)
+		close(pipex->infd);
+	if (pipex->outfd != -1)
+		close(pipex->outfd);
+	close(pipex->outfd);
+	int j = 0;
+	while (j < pipex->nbr_cmd)
+	{
+		// wait(NULL);
+		waitpid(pipex->id1, &pipex->status, 0);
+		j++;
+	}
 	if (WIFEXITED(pipex->status))
 			exit_status = WEXITSTATUS(pipex->status);
+	free(pipex->pipefd);
 	free(pipex);
 	return (exit_status);
 
