@@ -104,13 +104,10 @@ int	main(int argc, char **argv, char **env)
 	pipex->nbr_cmd = argc - 3;
 	pipex->nbr_pipe = pipex->nbr_cmd - 1;
 	pipex->pos = 0;
-
 	pipex->pipefd = malloc(sizeof(t_pipe) * (pipex->nbr_pipe));
 		if (!pipex->pipefd)
 			return (perror("pipefd malloc"), 1);
-
 	ft_open_pipe(pipex);
-
 	// pipex->infd = open(argv[1], O_RDONLY, 0777);
 	// if (pipex->infd < 0)
 	// {
@@ -123,13 +120,12 @@ int	main(int argc, char **argv, char **env)
 	// 	// ft_close_all(pipex, EXIT);
 	// 	// return (perror("outfile"), 1);
 	// }
-
 	while (pipex->pos < pipex->nbr_cmd)
 	{
-		pipex->id1 = fork();
-		if (pipex->id1 < 0)
+		pipex->pipefd[pipex->pos].id1 = fork();
+		if (pipex->pipefd[pipex->pos].id1 < 0)
 			return (close(pipex->fd[0]), close(pipex->fd[1]), free(pipex), 1);
-		if (pipex->id1 == 0)
+		if (pipex->pipefd[pipex->pos].id1 == 0)
 		{
 			if (pipex->nbr_cmd == 1)
 			{
@@ -177,7 +173,6 @@ int	main(int argc, char **argv, char **env)
 			free(pipex);
 		}
 		pipex->pos++;
-		// wait(NULL);
 	}
 	ft_close_pipe(pipex);
 	if (pipex->infd != -1)
@@ -189,7 +184,7 @@ int	main(int argc, char **argv, char **env)
 	while (j < pipex->nbr_cmd)
 	{
 		// wait(NULL);
-		waitpid(pipex->id1, &pipex->status, 0);
+		waitpid(pipex->pipefd[j].id1, &pipex->status, 0);
 		j++;
 	}
 	if (WIFEXITED(pipex->status))
