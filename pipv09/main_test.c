@@ -12,7 +12,6 @@
 
 #include "pipex_bonus.h"
 
-
 void	ft_open_pipe(t_pipex *pipex)
 {
 	int	i;
