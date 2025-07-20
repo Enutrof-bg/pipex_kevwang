@@ -86,6 +86,65 @@ void	cmd2(char **argv, char **env, t_pipex *pipex)
 	}
 }
 
+int	ft_here_doc(int argc, char **argv, char **env, t_pipex *pipex)
+{
+	char	*test;
+
+	pipex->infd = open("temp", O_WRONLY | O_CREAT | O_APPEND, 0644);
+	test = get_next_line(0);
+	while (test)
+	{
+		if (ft_strncmp(test, argv[2], ft_strlen(argv[2])) == 0)
+		{
+			free(test);
+			break ;
+		}
+		write(pipex->infd, test, ft_strlen(test));
+		free(test);
+		test = get_next_line(0);
+	}
+	close(pipex->infd);
+	if (pipe(pipex->fd) == -1)
+		exit(EXIT_FAILURE);
+	pipex->id1 = fork();
+	if (pipex->id1 == 0)
+	{
+		pipex->infd = open("temp", O_RDONLY, 0777);
+		dup2(pipex->infd, 0);
+		dup2(pipex->fd[1], 1);
+		close(pipex->fd[0]);
+		close(pipex->fd[1]);
+		close(pipex->infd);
+		exec(argv[3], env);
+		// close(pipex->fd[1]);
+		// close(pipex->infd);
+	}
+	wait(NULL);
+	close(pipex->fd[1]);
+	if (argc == 6)
+	{
+		pipex->id1 = fork();
+		if (pipex->id1 == 0)
+		{
+			pipex->outfd = open(argv[argc -1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+			dup2(pipex->fd[0], 0);
+			dup2(pipex->outfd, 1);
+			close(pipex->fd[1]);
+			close(pipex->fd[0]);
+			close(pipex->outfd);
+			exec(argv[4], env);
+			// close(pipex->fd[1]);
+			// close(pipex->outfd);
+		}
+		wait(NULL);
+	}
+	close(pipex->fd[0]);
+	// close(pipex->fd[1]);
+	unlink("temp");
+	free(pipex);
+	return (0);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 
@@ -99,12 +158,17 @@ int	main(int argc, char **argv, char **env)
 	pipex = malloc(sizeof(t_pipex));
 	if (!pipex)
 		return (1);
+	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
+	{
+		ft_here_doc(argc, argv, env, pipex);
+		return (0);
+	}
 	pipex->infd = -1;
 	pipex->outfd = -1;
 	pipex->nbr_cmd = argc - 3;
 	pipex->nbr_pipe = pipex->nbr_cmd - 1;
 	pipex->pos = 0;
-	pipex->pipefd = malloc(sizeof(t_pipe) * (pipex->nbr_pipe));
+	pipex->pipefd = malloc(sizeof(t_pipe) * (pipex->nbr_cmd));
 		if (!pipex->pipefd)
 			return (perror("pipefd malloc"), 1);
 	ft_open_pipe(pipex);
