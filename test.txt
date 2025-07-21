@@ -1,0 +1,87 @@
+./pipex infile "cat -e" "wc -l" outfile
+
+./pipex infile "grep Now" outfile
+
+./pipex infile "cat -e" outfile
+
+./pipex infile2 "cat -e" "ls" outfile
+
+./pipex infile2 "cat -e" "ls" outfile
+
+./pipex infile "cat" "head -5" outfile
+
+< infile grep Now | wc -w > outfile
+./pipex infile "grep Now" "wc -w" outfile
+
+< infile wc -w | cat > outfile
+./pipex infile "wc -w" "cat" oufile
+
+<infile wc -w | wc -m > outfile
+./pipex infile "wc -w" "wc -m" outfile
+
+./pipex infile "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" outfile
+
+./pipex infile "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" outfile
+
+< infile sleep 2 | sleep 3 | sleep 1 > outfile
+./pipex infile "sleep 2" "sleep 3" "sleep 1" outfile
+
+< infile zzz | ls -l > outfile
+zsh: command not found: zzz
+//mais outfile contien ls -l //echo $? = 0
+./pipex infile "asdasd" "ls -l" outfile
+//outfile contient ls -l //echo $? = 0
+ok
+
+< infile zzz | dsf > outfile
+zsh: command not found: zzz
+zsh: command not found: dsf
+//outfile est crer mais vide //echo $? = 127
+./pipex infile "asdasd" "lsasdasd -l" outfile
+//outfile est vide // echo $? = 127
+ok
+
+< infile casda | grep Now > outfile
+zsh: command not found: casda
+//outfile vide // echo $? = 1
+./pipex infile "asdasd" "grep Now" outfile
+//outfile vide //echo $? = 1
+ok
+
+< infile cat | grasdasd > outfile
+zsh: command not found: grasdasd
+//outfile vide //echo $? = 127
+./pipex infile "cat" "asdasd" outfile
+//outfile vide  //echo $? = 127
+ok
+
+chmod 000 infile
+< infile cat | grep Now > outfile
+zsh: permission denied: infile
+//outfile vide // echo $? = 1
+./pipex infile "cat" "grep Now" outfile
+//outfile vide echo $? = 1
+ok
+
+chmod 000 infile
+< infile cat | ls -l > outfile
+zsh: permission denied: infile
+//outfile contient ls -l //echo $? = 0
+./pipex infile "cat" "ls -l" outfile
+//outfile contien ls -l //echo $? = 0
+ok
+
+
+./pipex infile cat "hostname" outfile
+<infile cat | hostname > outfile
+//outfile vaut hostname //echo $? = 0
+
+
+./pipex infile "cat -e" "cat -e" "cat -e" "cat -e" "cat -e" outfile
+< infile cat -e |cat -e |cat -e |cat -e |cat -e >outfile
+
+
+./pipex big "sleep 3" "ls" outfile
+
+
+./pipex big "cat -e" "head -2" outfile

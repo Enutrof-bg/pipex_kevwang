@@ -6,14 +6,19 @@ int main(int argc, char **argv, char **env)
     (void)argc;
     (void)argv;
     (void)env;
-    int i = 0;
-    while (env[i])
-    {
-        ft_printf("%s\n", env[i]);
-        i++;
-    }
+    // int i = 0;
+    // while (env[i])
+    // {
+    //     ft_printf("%s\n", env[i]);
+    //     i++;
+    // }
 
+    char *args[3];
+    args[0] = "ls";
+    args[1] = "-l";
+    args[2] = NULL;
 
+    execve("/bin/ls", args, NULL);
 
 /*
     char *args[3];
