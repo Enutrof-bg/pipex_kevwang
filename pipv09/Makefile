@@ -24,12 +24,12 @@ pipex_utlis.c \
 pipex_path.c \
 pipex_free.c
 
-FILEBONUS = main_test2.c \
+FILEBONUS = main_bonus.c \
 ft_split.c \
 ft_strjoin.c \
 pipex_utlis.c \
 pipex_path_bonus.c \
-pipex_free.c \
+pipex_free_bonus.c \
 pipex_cmd_bonus.c
 
 INCLUDEPRINT = -Lft_printf -lftprintf

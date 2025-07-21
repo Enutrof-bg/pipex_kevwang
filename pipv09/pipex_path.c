@@ -55,20 +55,20 @@ char	*check_path(char **tab, char **cmd)
 	return (NULL);
 }
 
-char *ft_str_last(char *str)
+char	*ft_str_last(char *str)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	j = 0;
 	i = 0;
 	while (str[i])
 		i++;
-	while (str[i-j] != '/' && j < i)
+	while (str[i - j] != '/' && j < i)
 		j++;
-	if (str[i-j] == '/')
+	if (str[i - j] == '/')
 		j--;
-	return (&str[i-j]);
+	return (&str[i - j]);
 }
 
 int	exec(char *arg, char **env)

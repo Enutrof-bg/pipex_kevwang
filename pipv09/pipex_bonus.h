@@ -27,8 +27,8 @@
 
 typedef struct s_pipe
 {
-	int	fd[2];
-	int id1;
+	int		fd[2];
+	int		id1;
 }t_pipe;
 
 typedef struct s_pipex
@@ -41,7 +41,7 @@ typedef struct s_pipex
 	int		infd;
 	int		outfd;
 	int		id1;
-	int 	id2;
+	int		id2;
 	int		nbr_cmd;
 	int		nbr_pipe;
 	int		fd[2];
@@ -50,7 +50,7 @@ typedef struct s_pipex
 
 	char	*heredoc;
 
-	int 	status;
+	int		status;
 	int		exit_status;
 }t_pipex;
 

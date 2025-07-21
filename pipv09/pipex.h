@@ -37,7 +37,7 @@ typedef struct s_pipex
 	int		id2;
 	int		fd[2];
 
-	int 	status;
+	int		status;
 	int		exit_status;
 }t_pipex;
 
