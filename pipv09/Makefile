@@ -66,6 +66,7 @@ clean:
 	pipex_path.o \
 	pipex_path_bonus.o \
 	pipex_free.o \
+	pipex_free_bonus.o \
 	pipex_cmd_bonus.o \
 	outfile
 
