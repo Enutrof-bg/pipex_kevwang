@@ -59,3 +59,10 @@ void	ft_close_all(t_pipex *pipex, int exit_val)
 	if (exit_val >= 0)
 		exit(exit_val);
 }
+
+void	ft_free_pipex(t_pipex *pipex)
+{
+	if (pipex->pipefd)
+		free(pipex->pipefd);
+	free(pipex);
+}

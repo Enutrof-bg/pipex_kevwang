@@ -30,7 +30,9 @@ ft_strjoin.c \
 pipex_utlis.c \
 pipex_path_bonus.c \
 pipex_free_bonus.c \
-pipex_cmd_bonus.c
+pipex_cmd_bonus.c\
+pipex_utils_bonus.c \
+pipex_heredoc_bonus.c
 
 INCLUDEPRINT = -Lft_printf -lftprintf
 INCLUDEGNL = -Lgnl -lgnl
@@ -68,7 +70,8 @@ clean:
 	pipex_free.o \
 	pipex_free_bonus.o \
 	pipex_cmd_bonus.o \
-	outfile
+	pipex_utils_bonus.o \
+	pipex_heredoc_bonus.o
 
 fclean:clean
 	rm -f ft_printf/libftprintf.a
