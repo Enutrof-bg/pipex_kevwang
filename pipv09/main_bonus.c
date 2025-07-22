@@ -25,33 +25,32 @@ int	ft_init(t_pipex *pipex, int argc)
 	return (0);
 }
 
-int	ft_redir(t_pipex *pipex, char **argv, int argc)
+int	ft_redir(t_pipex *p, char **argv, int argc)
 {
-	if (pipex->nbr_cmd == 1)
+	if (p->nbr_cmd == 1)
 	{
-		if (ft_dup(pipex->infd, pipex->outfd) == -1)
-			return (ft_close_pipe(pipex), free(pipex->pipefd), free(pipex), 1);
+		if (ft_dup(p->infd, p->outfd) == -1)
+			return (ft_close_pipe(p), free(p->pipefd), free(p), 1);
 	}
-	else if (pipex->pos == 0)
+	else if (p->pos == 0)
 	{
-		pipex->infd = open(argv[1], O_RDONLY, 0644);
-		if (pipex->infd < 0)
-			ft_close_all(pipex, EXIT);
-		if (ft_dup(pipex->infd, pipex->pipefd[pipex->pos].fd[1]) == -1)
-			return (ft_close_pipe(pipex), free(pipex->pipefd), free(pipex), 1);
+		p->infd = open(argv[1], O_RDONLY, 0644);
+		if (p->infd < 0)
+			ft_close_all(p, EXIT);
+		if (ft_dup(p->infd, p->pipefd[p->pos].fd[1]) == -1)
+			return (ft_close_pipe(p), free(p->pipefd), free(p), 1);
 	}
-	else if (pipex->pos == pipex->nbr_cmd -1)
+	else if (p->pos == p->nbr_cmd -1)
 	{
-		pipex->outfd = open(argv[argc -1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-		if (pipex->outfd < 0)
-			ft_close_all(pipex, EXIT);
-		if (ft_dup(pipex->pipefd[pipex->pos - 1].fd[0], pipex->outfd) == -1)
-			return (ft_close_pipe(pipex), free(pipex->pipefd), free(pipex), 1);
+		p->outfd = open(argv[argc -1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		if (p->outfd < 0)
+			ft_close_all(p, EXIT);
+		if (ft_dup(p->pipefd[p->pos - 1].fd[0], p->outfd) == -1)
+			return (ft_close_pipe(p), free(p->pipefd), free(p), 1);
 	}
 	else
-		if (ft_dup(pipex->pipefd[pipex->pos - 1].fd[0],
-				pipex->pipefd[pipex->pos].fd[1]) == -1)
-			return (ft_close_pipe(pipex), free(pipex->pipefd), free(pipex), 1);
+		if (ft_dup(p->pipefd[p->pos - 1].fd[0], p->pipefd[p->pos].fd[1]) == -1)
+			return (ft_close_pipe(p), free(p->pipefd), free(p), 1);
 	return (0);
 }
 
