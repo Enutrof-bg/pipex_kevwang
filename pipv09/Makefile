@@ -76,7 +76,10 @@ clean:
 fclean:clean
 	rm -f ft_printf/libftprintf.a
 	rm -f gnl/libgnl.a
-	rm -f pipex
+	rm -f ${NAME}
+	rm -f ${NAMEBONUS}
 
 re:fclean
 	make
+
+.PHONY: all clean fclean re bonus

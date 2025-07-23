@@ -78,19 +78,35 @@ int	exec(char *arg, char **env)
 	char	**tab;
 	char	*path;
 
-	str = get_path(env);
-	envpath = ft_split(str, ':');
-	if (!envpath)
-		return (-1);
-	arg = ft_str_last(arg);
 	tab = ft_split(arg, ' ');
 	if (!tab)
-		return (ft_free(envpath, NULL, NULL), -1);
-	path = check_path(envpath, tab);
-	if (!path)
-		return (ft_free(envpath, tab, NULL), -1);
-	if (execve(path, tab, env) == -1)
-		return (ft_free(envpath, tab, path), -1);
-	ft_free(envpath, tab, path);
+		return (-1);
+	if (tab[0][0] == '/' || (tab[0][0] == '.' && tab[0][1] == '/'))
+	{
+		if (access(tab[0], X_OK) == -1)
+			return (ft_free_double_tab(tab), -1);
+		if (execve(tab[0], tab, env) == -1)
+			return (ft_free_double_tab(tab), -1);
+		ft_free_double_tab(tab);
+		return (0);
+	}
+	str = get_path(env);
+	if (str)
+	{
+		envpath = ft_split(str, ':');
+		if (!envpath)
+			return (ft_free_double_tab(tab), -1);
+		// arg = ft_str_last(arg);
+		path = check_path(envpath, tab);
+		if (!path)
+			return (ft_free(envpath, tab, NULL), -1);
+		if (execve(path, tab, env) == -1)
+		{
+			perror("command not found");
+			return (ft_free(envpath, tab, path), -1);
+		}
+		ft_free(envpath, tab, path);
+	}
+	ft_free_double_tab(tab);
 	return (0);
 }
