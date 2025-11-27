@@ -66,7 +66,7 @@ int	ft_commande(t_pipex *pipex, char **argv, int argc, char **env)
 		ft_close_pipe(pipex);
 		if (exec(argv[pipex->pos + 2], env) == -1)
 		{
-			perror("command not found");
+			perror("command not found3");
 			ft_close_all(pipex, 127);
 		}
 		ft_free_pipex(pipex);

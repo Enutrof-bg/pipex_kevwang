@@ -12,12 +12,25 @@
 
 #include "pipex.h"
 
+void	ft_err(char *msg1, char *msg2)
+{
+	write(2, msg1, ft_strlen(msg1));
+	if (msg2)
+	{
+		write(2, ": ", 2);
+		write(2, msg2, ft_strlen(msg2));
+		write(2, "\n", 1);
+	}
+}
+
 char	*get_path(char **env)
 {
 	char	*str;
 	int		i;
 
 	i = 0;
+	if (!env)
+		return (NULL);
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], "PATH", 4) == 0)
@@ -54,7 +67,7 @@ char	*check_path(char **tab, char **cmd)
 	}
 	return (NULL);
 }
-
+/*
 char	*ft_str_last(char *str)
 {
 	int	i;
@@ -70,43 +83,71 @@ char	*ft_str_last(char *str)
 		j--;
 	return (&str[i - j]);
 }
+*/
 
-int	exec(char *arg, char **env)
+int	exec2(char **tab, char **env)
 {
 	char	*str;
 	char	**envpath;
-	char	**tab;
 	char	*path;
 
-	tab = ft_split(arg, ' ');
-	if (!tab)
-		return (-1);
-	if (tab[0][0] == '/' || (tab[0][0] == '.' && tab[0][1] == '/'))
-	{
-		if (access(tab[0], X_OK) == -1)
-			return (ft_free_double_tab(tab), -1);
-		if (execve(tab[0], tab, env) == -1)
-			return (ft_free_double_tab(tab), -1);
-		ft_free_double_tab(tab);
-		return (0);
-	}
 	str = get_path(env);
 	if (str)
 	{
 		envpath = ft_split(str, ':');
 		if (!envpath)
 			return (ft_free_double_tab(tab), -1);
-		// arg = ft_str_last(arg);
 		path = check_path(envpath, tab);
 		if (!path)
-			return (ft_free(envpath, tab, NULL), -1);
+			return (ft_err("command not found1", tab[0]),
+				ft_free(envpath, tab, NULL), -1);
 		if (execve(path, tab, env) == -1)
-		{
-			perror("command not found");
-			return (ft_free(envpath, tab, path), -1);
-		}
-		ft_free(envpath, tab, path);
+			return (ft_err("command not found2", tab[0]),
+				ft_free(envpath, tab, path), -1);
+		return (ft_free(envpath, tab, path), 0);
 	}
-	ft_free_double_tab(tab);
 	return (0);
 }
+
+int	exec(char *arg, char **env)
+{
+	char	**tab;
+
+	tab = ft_split(arg, ' ');
+	if (!tab)
+		return (-1);
+	if (!tab[0])
+		return (ft_free_double_tab(tab), -1);
+	if (tab[0][0] == '/' || (tab[0][0] == '.' && tab[0][1] == '/'))
+	{
+		if (access(tab[0], X_OK) == -1)
+			return (ft_err("no such file or directory", tab[0]),
+				ft_free_double_tab(tab), -1);
+		if (execve(tab[0], tab, env) == -1)
+			return (perror("execve"), ft_free_double_tab(tab), -1);
+		return (ft_free_double_tab(tab), 0);
+	}
+	if (exec2(tab, env) == -1)
+		return (-1);
+	return (ft_free_double_tab(tab), 0);
+}
+
+//test
+//caca pipex_path.c ft_split.c pipex_free.c ft_strjoin.c pipex_utlis.c 
+// int	main(int argc, char **argv, char **env)
+// {
+// 	// (void)env;
+// 	if (argc == 2)
+// 	{
+// 	// 	char **tab = ft_split(argv[1], ' ');
+// 	// 	int i = 0;
+// 	// 	while (tab[i])
+// 	// 	{
+// 	// 		printf("%s\n", tab[i]);
+// 	// 		i++;
+// 	// 	}
+// 		exec(argv[1], env);
+// 		// free(tab);
+// 	}
+// 	return (0);
+// }

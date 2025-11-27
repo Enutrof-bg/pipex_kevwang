@@ -26,7 +26,7 @@ void	cmd1(char **argv, char **env, t_pipex *pipex)
 	close(pipex->infd);
 	if (exec(argv[2], env) == -1)
 	{
-		perror("command not found");
+		perror("command not found4");
 		ft_close_all(pipex, EXIT);
 	}
 }
@@ -45,7 +45,7 @@ void	cmd2(char **argv, char **env, t_pipex *pipex)
 	close(pipex->outfd);
 	if (exec(argv[3], env) == -1)
 	{
-		perror("command not found");
+		perror("command not found5");
 		ft_close_all(pipex, 127);
 	}
 }

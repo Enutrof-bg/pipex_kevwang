@@ -28,9 +28,8 @@ FILEBONUS = main_bonus.c \
 ft_split.c \
 ft_strjoin.c \
 pipex_utlis.c \
-pipex_path_bonus.c \
+pipex_path.c \
 pipex_free_bonus.c \
-pipex_cmd_bonus.c\
 pipex_utils_bonus.c \
 pipex_heredoc_bonus.c
 
